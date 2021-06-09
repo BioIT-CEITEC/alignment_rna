@@ -1,0 +1,182 @@
+{
+  "workflow_description": {
+    "name": "alignment_RNA",
+    "version": 1.0,
+    "label": "Alignment RNA",
+    "type": "alignment_RNA",
+    "inputs": "*/{sample}_R*.fastq.gz",
+    "outputs": [
+      "mapped/{sample}.bam",
+      "mapped/{sample}.bam.bai",
+      "sample_logs/{sample}/*"
+    ]
+  },
+  "general_params": [
+    "library_name",
+    "sample_name",
+    "lib_forward_read_length",
+    "lib_reverse_read_length"
+  ],
+  "gui_params": {
+    "primary": {
+      "UMI": {
+        "label": "UMI",
+        "type": "enum",
+        "default": "no_umi",
+        "list": {
+          "no_umi": "No UMI",
+          "BRONCO": "BRONCO",
+          "custom": "Custom specified UMI"
+        }
+      },
+      "umi_usage": {
+        "label": "UMI usage",
+        "type": "enum",
+        "default": "mark_duplicates",
+        "list": {
+          "no": "Don't use UMI",
+          "mark_duplicates": "Mark duplicates",
+          "umi_concensus": "UMI concensus"
+        },
+        "conditions": {
+          "relevance": {
+            "operand": "equal",
+            "negation": true,
+            "values": {
+              "UMI": "no_umi"
+            }
+          }
+        }
+      },
+      "lib_ROI": {
+        "label": "Regions of interest",
+        "type": "enum",
+        "default": "wgs",
+        "list": {
+          "wgs": "WGS or no DNA panel",
+          "GRCh37-p13": {
+            "BRONCO": "BRONCO",
+            "MedExome_GRCh37": "MedExome_GRCh37",
+            "TruSeq_Exome": "TruSeq_Exome",
+            "OncoZoom": "OncoZoom"
+          },
+          "GRCh38-p10": {
+            "cosimo_amplicon": "cosimo_amplicon",
+            "MedExome_GRCh38": "MedExome_GRCh38",
+            "QIAseq": "QIAseq",
+            "RNA": "RNA",
+            "uni_exome": "uni_exome"
+          }
+        }
+      },
+      "reference": {
+        "label": "Genomic Reference",
+        "type": "enum",
+        "default": "GRCh38-p10",
+        "conditions": {
+          "relevance": {
+            "operand": "equal",
+            "negation": false,
+            "values": {
+              "lib_ROI": "wgs"
+            }
+          }
+        },
+        "list": {
+          "Homo sapiens": {
+            "GRCh37-p13": "GRCh37-p13",
+            "GRCh38-p10": "GRCh38-p10"
+          },
+          "Mus musculus": {
+            "GRCm38.p6-93": "GRCm38.p6-93"
+          },
+          "Arabidopsis thaliana": {
+            "TAIR10-31": "TAIR10-31"
+          },
+          "Nothobranchius furzeri": {
+            "Nfu_20150922": "Nfu_20150922",
+            "NFZv2.0": "NFZv2.0"
+          },
+          "Rattus norvegicus": {
+            "Rnor_6.0-91": "Rnor_6.0-91"
+          },
+          "Drosophila melanogaster": {
+            "BDGP6-90": "BDGP6-90",
+            "BDGP6-99": "BDGP6-99"
+          },
+          "Canis familiaris": {
+            "CanFam3.1-90": "CanFam3.1-90",
+            "CanFam3.1-101": "CanFam3.1-101"
+          },
+          "Trichinella spiralis": {
+            "Tspiralis1-37": "Tspiralis1-37"
+          },
+          "Brassica napus": {
+            "AST_PRJEB5043_v1": "AST_PRJEB5043_v1",
+            "Bra_napus_v2": "Bra_napus_v2"
+          },:
+          "Saccharomyces cerevisiae": {
+            "R64-1-1.100": "R64-1-1.100"
+          },
+          "Prorhinotermes simplex": {
+            "Peska_transcriptome": "Peska_transcriptome"
+          },
+          "Zootermopsis nevadensis": {
+            "Znev_1_0": "Znev_1_0"
+          },
+          "Caenorhabditis elegans": {
+            "WBcel235-102": "WBcel235-102"
+          },
+          "Danio rerio": {
+            "GRCz11-102": "GRCz11-102"
+          },
+          "Cyprinus carpio": {
+            "Common_carp_ncbi": "Common_carp_ncbi",
+            "Hebao_red_carp_1.0-103": "Hebao_red_carp_1.0-103"
+          }
+        }
+      }
+    },
+    "detailed": {
+      "trim_adapters": {
+        "label": "Trim adapters",
+        "type": "bool",
+        "default": false
+      },
+      "mark_duplicates": {
+        "label": "Mark duplicates",
+        "type": "bool",
+        "default": true
+      },
+      "trim_quality": {
+        "label": "Trim quality",
+        "type": "bool",
+        "default": false
+      },
+      "remove_duplicates": {
+        "label": "Remove duplicates",
+        "type": "bool",
+        "default": true
+      },
+      "keep_not_markDups_bam": {
+        "label": "Keep not_markDups_bam file",
+        "type": "bool",
+        "default": false
+      },
+      "umi_consensus_min_support": {
+        "label": "UMI consensus min_support",
+        "type": "int",
+        "default": 1,
+        "conditions": {
+          "relevance": {
+            "operand": "equal",
+            "negation": false,
+            "values": {
+              "umi_usage": "umi_concensus"
+            }
+          }
+        }
+      }
+    }
+  }
+}

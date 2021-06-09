@@ -1,0 +1,22 @@
+{
+  "lib_forward_read_length": 151,
+  "lib_reverse_read_length": 151,
+  "UMI": "no",
+  "organism": "homsap",
+  "reference": "GRCh38-p10",
+  "lib_ROI": "wgs",
+  "pair": "PE",
+  "perc_mismatch": 0.1,
+  'map_perc': "0.66",
+  'map_score': "0.66",
+  "strandness": "false",
+  "max_intron": 1000000,
+  "samples": {
+    "id4": {
+      "sample_name": "DG1810_fusion"
+    },
+    "id5": {
+      "sample_name": "KV1758_fusion"
+    }
+  }
+}
