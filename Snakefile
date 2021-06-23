@@ -27,9 +27,8 @@ wildcard_constraints:
 ##### Target rules #####
 rule all:
     input:
-        expand("mapped/{sample}.not_markDups.bam",sample = sample_tab.sample_name),
-        expand("mapped/{sample}.not_markDups.bam.bai", sample = sample_tab.sample_name),
-        expand("mapped/{sample}.transcriptome.bam", sample = sample_tab.sample_name)
+        expand("mapped/{sample}.bam",sample = sample_tab.sample_name),
+        expand("mapped/{sample}.bam.bai", sample = sample_tab.sample_name),
 
 ##### Modules #####
 

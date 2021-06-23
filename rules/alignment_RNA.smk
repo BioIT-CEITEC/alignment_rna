@@ -6,16 +6,18 @@ rule mark_duplicates:
             bai = "mapped/{sample}.not_markDups.bam.bai"
     output: bam = "mapped/{sample}.bam",
             bai = "mapped/{sample}.bam.bai"
-    log:    run = "sample_logs/{sample}/mark_duplicates.log"
+    log: "logs/{sample}/mark_duplicates.log"
     threads:  8
     resources:  mem = 15
     params:
             mtx = "postQC/{sample}/MarkDuplicates/{sample}.markDups_metrics.txt",
-            rmDup = "false", # allow possibility for rm duplicates true
+            mark_duplicates= config["mark_duplicates"],
+            rmDup = config["remove_duplicates"], # allow possibility for rm duplicates true
             UMI = config["UMI"],
-            umi_fastq = "raw_fastq/{sample}.UMI.fastq",
-            umi_temp_file = "mapped/{sample}.not_markDups.UMIannot.bam"
-    shell: "touch {output}"
+            umi_usage= config["umi_usage"],
+            keep_not_markDups_bam= config["keep_not_markDups_bam"],
+    conda: "../wrappers/mark_duplicates/env.yaml"
+    script: "../wrappers/mark_duplicates/script.py"
 
 
 def alignment_RNA_input(wildcards):
@@ -36,7 +38,7 @@ rule alignment_RNA:
         bam = "mapped/{sample}.not_markDups.bam",
         bai = "mapped/{sample}.not_markDups.bam.bai",
         transcriptom_bam = "mapped/{sample}.transcriptome.bam"
-    log:run = "sample_logs/{sample}/alignment.log"
+    log: "logs/{sample}/alignment.log"
     threads: 40
     resources:  mem = 34
     params:
