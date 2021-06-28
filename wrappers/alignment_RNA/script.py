@@ -5,40 +5,37 @@ import os
 import subprocess
 import glob
 from snakemake.shell import shell
-
-STAR = "STAR"
-SAMTOOLS = "samtools"
-BEDGRAPH2BIGWIG = "bedGraphToBigWig"
-
 shell.executable("/bin/bash")
+log_filename = str(snakemake.log)
 
-f = open(snakemake.log.run, 'a+')
+f = open(log_filename, 'a+')
 f.write("\n##\n## RULE: alignment_RNA \n##\n")
 f.close()
 
-
-version = str(subprocess.Popen(STAR+" --version 2>&1", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
-f = open(snakemake.log.run, 'at')
+version = str(subprocess.Popen("STAR --version 2>&1", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
+f = open(log_filename, 'at')
 f.write("## VERSION: "+version+"\n")
 f.close()
 
-version = str(subprocess.Popen(SAMTOOLS+" --version 2>&1 | grep samtools", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
-f = open(snakemake.log.run, 'at')
+version = str(subprocess.Popen("samtools --version 2>&1 | grep samtools", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
+f = open(log_filename, 'at')
 f.write("## VERSION: "+version+"\n")
 f.close()
 
-command = "mkdir -p "+snakemake.params.prefix+" >> "+snakemake.log.run+" 2>&1"
-f = open(snakemake.log.run, 'at')
+command = "mkdir -p "+snakemake.params.prefix+" >> "+log_filename+" 2>&1"
+f = open(log_filename, 'at')
 f.write("## COMMAND: "+command+"\n")
 f.close()
 shell(command)
 
-if isinstance(snakemake.input.index, list):
-    star_index_dir = snakemake.input.index[0].replace("/SAindex","")
-else:
-    star_index_dir = snakemake.input.index.replace("/SAindex","")
+# if isinstance(snakemake.input.index, list):
+#     star_index_dir = snakemake.input.index[0].replace("/SAindex","")
+# else:
+#     star_index_dir = snakemake.input.index.replace("/SAindex","")
 
-f = open(snakemake.log.run, 'at')
+star_index_dir = snakemake.input.index.replace("/SAindex","")
+
+f = open(log_filename, 'at')
 
 strandness = False if snakemake.params.strandness == "unstr" else True
 
@@ -57,7 +54,7 @@ if snakemake.params.pair == "SE":
 else:
     STAR_parameters = " --peOverlapMMp 0.1 --chimOutJunctionFormat 1 --chimSegmentMin 12 --chimJunctionOverhangMin 12"
 
-command = STAR+" --runMode alignReads --runThreadN " + str(snakemake.threads) + \
+command = "STAR --runMode alignReads --runThreadN " + str(snakemake.threads) + \
                " --genomeDir " + star_index_dir + \
                " --readFilesIn " + str(snakemake.input.fastqs)  + \
                " --readFilesCommand zcat" + \
@@ -75,43 +72,43 @@ command = STAR+" --runMode alignReads --runThreadN " + str(snakemake.threads) + 
                " --outSAMattrRGline ID:"+str(snakemake.wildcards.sample)+" PL:Illumina PU:"+str(snakemake.wildcards.sample)+" SM:"+str(snakemake.wildcards.sample) + \
                " --outSAMunmapped Within --outFilterType BySJout --outSAMattributes All" + \
                extra_flags_star_motif +" --quantMode GeneCounts TranscriptomeSAM --sjdbScore 1 --twopassMode Basic " + \
-               " --outMultimapperOrder Random --outSAMtype BAM SortedByCoordinate >> "+snakemake.log.run+" 2>&1 "
-f = open(snakemake.log.run, 'at')
+               " --outMultimapperOrder Random --outSAMtype BAM SortedByCoordinate >> "+log_filename+" 2>&1 "
+f = open(log_filename, 'at')
 f.write("## COMMAND: "+command+"\n")
 f.close()
 
 shell(command)
 
-command = "mv " + snakemake.params.prefix + "Aligned.sortedByCoord.out.bam " + snakemake.output.bam + " >> "+snakemake.log.run+" 2>&1 "
-f = open(snakemake.log.run, 'at')
+command = "mv " + snakemake.params.prefix + "Aligned.sortedByCoord.out.bam " + snakemake.output.bam + " >> "+log_filename+" 2>&1 "
+f = open(log_filename, 'at')
 f.write("## COMMAND: "+command+"\n")
 f.close()
 shell(command)
 
 if hasattr(snakemake.output, 'transcriptom_bam'):
-    command = "mv " + snakemake.params.prefix + "Aligned.toTranscriptome.out.bam " + snakemake.output.transcriptom_bam + " >> "+snakemake.log.run+" 2>&1 "
-    f = open(snakemake.log.run, 'at')
+    command = "mv " + snakemake.params.prefix + "Aligned.toTranscriptome.out.bam " + snakemake.output.transcriptom_bam + " >> "+log_filename+" 2>&1 "
+    f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
     shell(command)
 
-command = "rm -r " + snakemake.params.prefix + "*pass1" + " >> "+snakemake.log.run+" 2>&1 "
-f = open(snakemake.log.run, 'at')
+command = "rm -r " + snakemake.params.prefix + "*pass1" + " >> "+log_filename+" 2>&1 "
+f = open(log_filename, 'at')
 f.write("## COMMAND: "+command+"\n")
 f.close()
 shell(command)
 
-command = SAMTOOLS +" index -@ "+str(snakemake.threads)+ " "+ snakemake.output.bam + " " + snakemake.output.bai + " >> "+snakemake.log.run+" 2>&1 "
-f = open(snakemake.log.run, 'at')
+command = "samtools index -@ "+str(snakemake.threads)+ " "+ snakemake.output.bam + " " + snakemake.output.bai + " >> "+log_filename+" 2>&1 "
+f = open(log_filename, 'at')
 f.write("## COMMAND: "+command+"\n")
 f.close()
 shell(command)
 
-command = STAR +" --runMode inputAlignmentsFromBAM" + \
+command = "STAR --runMode inputAlignmentsFromBAM" + \
                 " --inputBAMfile " + snakemake.output.bam + \
                 " --outWigType bedGraph" + extra_flags_star_wig + \
-                " --outFileNamePrefix " + snakemake.params.prefix+" >> "+snakemake.log.run+" 2>&1 " # --outWigReferencesPrefix chr suitable for UCSC
-f = open(snakemake.log.run, 'at')
+                " --outFileNamePrefix " + snakemake.params.prefix+" >> "+log_filename+" 2>&1 " # --outWigReferencesPrefix chr suitable for UCSC
+f = open(log_filename, 'at')
 f.write("## COMMAND: "+command+"\n")
 f.close()
 shell(command)
@@ -122,29 +119,29 @@ if hasattr(snakemake.output, 'transcriptom_bam'):
         chr_file = bg_file.replace(".bg","") + "_chr.bedGraph"
         if os.stat(bg_file).st_size != 0:
             # We need to change chromosome names to visualize the output in UCSC Browser http://seqanswers.com/forums/archive/index.php/t-22504.html
-            command = "Rscript "+convert_to_ucsc+" "+bg_file+" "+chr_file+" UCSC " + snakemake.params.organism + " >> "+snakemake.log.run+" 2>&1"
+            command = "Rscript "+convert_to_ucsc+" "+bg_file+" "+chr_file+" UCSC " + snakemake.params.organism + " >> "+log_filename+" 2>&1"
             #command = "cat " + bg_file + " | sed -e 's/^\\([0-9XY]\\)/chr\\1/' -e 's/^MT/chrM/' | grep '^chr' > " + chr_file + " 2>> "+snakemake.log.run+" || cp "+bg_file+" "+chr_file+ " >> "+snakemake.log.run+" 2>&1 "
-            f = open(snakemake.log.run, 'at')
+            f = open(log_filename, 'at')
             f.write("## COMMAND: "+command+"\n")
             f.close()
             shell(command)
 
             # Sort to proper order
-            command = "LC_COLLATE=C sort -k1,1 -k2,2n -o " + bg_file + ".tmp " + chr_file + " >> "+snakemake.log.run+" 2>&1 "
-            f = open(snakemake.log.run, 'at')
+            command = "LC_COLLATE=C sort -k1,1 -k2,2n -o " + bg_file + ".tmp " + chr_file + " >> "+log_filename+" 2>&1 "
+            f = open(log_filename, 'at')
             f.write("## COMMAND: "+command+"\n")
             f.close()
             shell(command)
 
-            command = "mv " + bg_file + ".tmp " + chr_file + " >> "+snakemake.log.run+" 2>&1 "
-            f = open(snakemake.log.run, 'at')
+            command = "mv " + bg_file + ".tmp " + chr_file + " >> "+log_filename+" 2>&1 "
+            f = open(log_filename, 'at')
             f.write("## COMMAND: "+command+"\n")
             f.close()
             shell(command)
 
             if os.stat(chr_file).st_size != 0:
-                command = BEDGRAPH2BIGWIG +" "+ chr_file + " " + snakemake.input.fai_ucsc + " " +  bg_file.replace(".bg","") + "_chr.bigWig >> "+snakemake.log.run+" 2>&1 "
-                f = open(snakemake.log.run, 'at')
+                command = "bedGraphToBigWig "+ chr_file + " " + snakemake.input.fai_ucsc + " " +  bg_file.replace(".bg","") + "_chr.bigWig >> "+log_filename+" 2>&1 "
+                f = open(log_filename, 'at')
                 f.write("## COMMAND: "+command+"\n")
                 f.close()
                 shell(command)
@@ -154,43 +151,42 @@ if hasattr(snakemake.output, 'transcriptom_bam'):
     # Prepare for RSEM: sort transcriptome BAM to ensure the order of the reads, to make RSEM output (not pme) deterministic
 
     if snakemake.params.pair == "SE":
-        command = "cat <( "+ SAMTOOLS+" view -H " +snakemake.output.transcriptom_bam+" ) <( " + SAMTOOLS + " view -@ " +str(snakemake.threads)+ " " + snakemake.output.transcriptom_bam +" | " + \
-                "sort -S "+ str(snakemake.resources.mem)+"G -T ./ ) | " + \
-                SAMTOOLS +" view -@ " + str(snakemake.threads)+" -b - > " + snakemake.output.transcriptom_bam+".tmp"
+        command = "cat <( samtools view -H " +snakemake.output.transcriptom_bam+" ) <( samtools view -@ " +str(snakemake.threads)+ " " + snakemake.output.transcriptom_bam +" | " + \
+                "sort -S "+ str(snakemake.resources.mem)+"G -T ./ ) | samtools view -@ " + str(snakemake.threads)+" -b - > " + snakemake.output.transcriptom_bam+".tmp"
     else:
-        command = "cat <( " + SAMTOOLS + " view -H " + snakemake.output.transcriptom_bam + " )" + \
-                  " <( " + SAMTOOLS + " view -@ " + str(snakemake.threads) + " " + snakemake.output.transcriptom_bam + " | " + \
+        command = "cat <( samtools view -H " + snakemake.output.transcriptom_bam + " )" + \
+                  " <( samtools view -@ " + str(snakemake.threads) + " " + snakemake.output.transcriptom_bam + " | " + \
                   "awk '{{line=$0; getline; printf \"%s %s\\n\",line,$0}}' | " + \
                   "sort -S " + str(snakemake.resources.mem) + "G -T ./ | tr ' ' '\\n' ) | " + \
-                  SAMTOOLS + " view -@ " + str(snakemake.threads) + " -b - > " + snakemake.output.transcriptom_bam + ".tmp" + \
-                  " 2>> " + snakemake.log.run + " 2>&1"
-    f = open(snakemake.log.run, 'at')
+                  "samtools view -@ " + str(snakemake.threads) + " -b - > " + snakemake.output.transcriptom_bam + ".tmp" + \
+                  " 2>> " + log_filename + " 2>&1"
+    f = open(log_filename, 'at')
     f.write("## COMMAND: " + command + "\n")
     f.close()
     shell(command)
 
-    command = "mv "+snakemake.output.transcriptom_bam+".tmp " + snakemake.output.transcriptom_bam + " >> " + snakemake.log.run + " 2>&1"
-    f = open(snakemake.log.run, 'at')
+    command = "mv "+snakemake.output.transcriptom_bam+".tmp " + snakemake.output.transcriptom_bam + " >> " + log_filename + " 2>&1"
+    f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
     shell(command)
 
     # Chimeric to BAM
-    command = SAMTOOLS + " view -@ " + str(snakemake.threads) +" -b " + snakemake.params.prefix + "Chimeric.out.sam" + " | " + SAMTOOLS + " sort -@ " + str(snakemake.threads) + " -T tmp.sort " + \
-    	"-o " + snakemake.params.prefix + "Chimeric.out.bam"  + " - >> " + snakemake.log.run + " 2>&1"
-    f = open(snakemake.log.run, 'at')
+    command = "samtools view -@ " + str(snakemake.threads) +" -b " + snakemake.params.prefix + "Chimeric.out.sam" + " | samtools sort -@ " + str(snakemake.threads) + " -T tmp.sort " + \
+    	"-o " + snakemake.params.prefix + "Chimeric.out.bam"  + " - >> " + log_filename + " 2>&1"
+    f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
     shell(command)
 
-    command = "rm -f " + snakemake.params.prefix + "Chimeric.out.sam" + " >> " + snakemake.log.run + " 2>&1"
-    f = open(snakemake.log.run, 'at')
+    command = "rm -f " + snakemake.params.prefix + "Chimeric.out.sam" + " >> " + log_filename + " 2>&1"
+    f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
     shell(command)
 
-    command = SAMTOOLS + " index -@ " + str(snakemake.threads) +" "+  snakemake.params.prefix + "Chimeric.out.bam" + " >> " + snakemake.log.run + " 2>&1"
-    f = open(snakemake.log.run, 'at')
+    command = "samtools index -@ " + str(snakemake.threads) +" "+  snakemake.params.prefix + "Chimeric.out.bam" + " >> " + log_filename + " 2>&1"
+    f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
     shell(command)
