@@ -1,10 +1,10 @@
 {
   "workflow_description": {
-    "name": "alignment_RNA",
+    "name": "alignment_rna",
     "version": 1.0,
     "label": "Alignment RNA",
-    "type": "alignment_RNA",
-    "inputs": "*/{sample}_R*.fastq.gz",
+    "type": "alignment",
+    "inputs": "raw_fastq/{sample}_R*.fastq.gz",
     "outputs": [
       "mapped/{sample}.bam",
       "mapped/{sample}.bam.bai",
@@ -114,7 +114,7 @@
           "Brassica napus": {
             "AST_PRJEB5043_v1": "AST_PRJEB5043_v1",
             "Bra_napus_v2": "Bra_napus_v2"
-          },:
+          },
           "Saccharomyces cerevisiae": {
             "R64-1-1.100": "R64-1-1.100"
           },

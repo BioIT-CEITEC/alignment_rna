@@ -4,16 +4,24 @@ from snakemake.utils import min_version
 
 min_version("5.18.0")
 
-GLOBAL_REF_PATH = "/mnt/ssd/ssd_3/references"
+GLOBAL_REF_PATH = "/mnt/references/"
+
+
+##### Config processing #####
+# setting organism from reference
+f = open(os.path.join(GLOBAL_REF_PATH,"reference_info","genomic_references.json"),)
+reference_dict = json.load(f)
+f.close()
+config["organism"] = [organism_name for organism_name in reference_dict.keys() if isinstance(reference_dict[organism_name],dict) and config["reference"] in reference_dict[organism_name].values()][0]
 
 # Folders
 #
 reference_directory = os.path.join(GLOBAL_REF_PATH,config["organism"],config["reference"])
 
-##### Config processing #####
-
+# Samples
+#
 sample_tab = pd.DataFrame.from_dict(config["samples"],orient="index")
-print(sample_tab)
+
 
 if config["lib_reverse_read_length"] == 0:
     read_pair_tags = [""]
@@ -27,9 +35,8 @@ wildcard_constraints:
 ##### Target rules #####
 rule all:
     input:
-        expand("mapped/{sample}.not_markDups.bam",sample = sample_tab.sample_name),
-        expand("mapped/{sample}.not_markDups.bam.bai", sample = sample_tab.sample_name),
-        expand("mapped/{sample}.transcriptome.bam", sample = sample_tab.sample_name)
+        expand("mapped/{sample}.bam",sample = sample_tab.sample_name),
+        expand("mapped/{sample}.bam.bai", sample = sample_tab.sample_name),
 
 ##### Modules #####
 

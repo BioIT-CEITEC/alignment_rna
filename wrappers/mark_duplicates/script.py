@@ -2,8 +2,6 @@
 # wrapper for rule: mark_duplicates
 ######################################
 import os
-import sys
-import math
 import subprocess
 from snakemake.shell import shell
 
