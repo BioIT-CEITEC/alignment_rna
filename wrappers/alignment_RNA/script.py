@@ -28,6 +28,7 @@ f.write("## COMMAND: "+command+"\n")
 f.close()
 shell(command)
 
+
 # if isinstance(snakemake.input.index, list):
 #     star_index_dir = snakemake.input.index[0].replace("/SAindex","")
 # else:
