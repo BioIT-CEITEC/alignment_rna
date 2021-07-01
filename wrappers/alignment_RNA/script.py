@@ -50,7 +50,8 @@ else:
     f.write("Running as Unstranded experiment \n")
 f.close()
 
-if snakemake.params.pair == "SE":
+
+if snakemake.params.paired == "SE":
     STAR_parameters = " --chimSegmentMin 30"
 else:
     STAR_parameters = " --peOverlapMMp 0.1 --chimOutJunctionFormat 1 --chimSegmentMin 12 --chimJunctionOverhangMin 12"
@@ -151,7 +152,8 @@ if hasattr(snakemake.output, 'transcriptom_bam'):
     # Sort transcriptome BAMs
     # Prepare for RSEM: sort transcriptome BAM to ensure the order of the reads, to make RSEM output (not pme) deterministic
 
-    if snakemake.params.pair == "SE":
+    #if snakemake.params.pair == "SE":
+    if snakemake.wildcards.paired == "SE":
         command = "cat <( samtools view -H " +snakemake.output.transcriptom_bam+" ) <( samtools view -@ " +str(snakemake.threads)+ " " + snakemake.output.transcriptom_bam +" | " + \
                 "sort -S "+ str(snakemake.resources.mem)+"G -T ./ ) | samtools view -@ " + str(snakemake.threads)+" -b - > " + snakemake.output.transcriptom_bam+".tmp"
     else:
