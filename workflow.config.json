@@ -4,11 +4,9 @@
     "version": 1.0,
     "label": "Alignment RNA",
     "type": "alignment_RNA",
-    "inputs": "*/{sample}_R*.fastq.gz",
+    "inputs": "*/{sample}{read_pair_tag}.fastq.gz",
     "outputs": [
-      "mapped/{sample}.bam",
-      "mapped/{sample}.bam.bai",
-      "sample_logs/{sample}/*"
+      "mapped/*"
     ]
   },
   "general_params": [
@@ -26,7 +24,15 @@
         "list": {
           "no_umi": "No UMI",
           "BRONCO": "BRONCO",
-          "custom": "Custom specified UMI"
+          "Quantseq FWD": "Quantseq FWD",
+          "CORALL": "CORALL",
+          "custom_umi": "Custom specified UMI",
+          "CS_UMI": "CS_UMI",
+          "CS_UMI_sep_file": "CS_UMI_sep_file",
+          "IDT": "IDT",
+          "BRB": "BRB",
+          "LYNX": "LYNX",
+          "Qiaseq": "Qiaseq"
         }
       },
       "umi_usage": {
@@ -55,9 +61,10 @@
         "list": {
           "wgs": "WGS or no DNA panel",
           "GRCh37-p13": {
+            "TP53_amplicon": "TP53 amplicon",
             "BRONCO": "BRONCO",
-            "MedExome_GRCh37": "MedExome_GRCh37",
-            "TruSeq_Exome": "TruSeq_Exome",
+            "MedExome_GRCh37": "MedExome GRCh37",
+            "TruSeq_Exome": "TruSeq Exome",
             "OncoZoom": "OncoZoom"
           },
           "GRCh38-p10": {
@@ -114,7 +121,7 @@
           "Brassica napus": {
             "AST_PRJEB5043_v1": "AST_PRJEB5043_v1",
             "Bra_napus_v2": "Bra_napus_v2"
-          },:
+          },
           "Saccharomyces cerevisiae": {
             "R64-1-1.100": "R64-1-1.100"
           },
@@ -163,19 +170,35 @@
         "type": "bool",
         "default": false
       },
-      "umi_consensus_min_support": {
-        "label": "UMI consensus min_support",
+      "max_intron": {
+        "label": "Max intron",
         "type": "int",
-        "default": 1,
-        "conditions": {
-          "relevance": {
-            "operand": "equal",
-            "negation": false,
-            "values": {
-              "umi_usage": "umi_concensus"
-            }
-          }
+        "default": 1000000
+      },
+      "strandness": {
+        "label": "Strandness",
+        "type": "enum",
+        "default": "unstr",
+        "list": {
+          "unstr": "Unstranded",
+          "fwd": "Forward",
+          "rev": "Reverse"
         }
+      },
+      "map_score": {
+        "label": "Map score",
+        "type": "string",
+        "default": "0.66"
+      },
+      "map_perc": {
+        "label": "Map perc",
+        "type": "string",
+        "default": "0.66"
+      },
+      "perc_mismatch": {
+        "label": "Perc mismatch",
+        "type": "string",
+        "default": "0.66"
       }
     }
   }
