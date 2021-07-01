@@ -1,7 +1,6 @@
 ######################################
 # wrapper for rule: preprocess
 ######################################
-import re
 import subprocess
 from snakemake.shell import shell
 shell.executable("/bin/bash")
@@ -121,7 +120,7 @@ else:
         TRAILING:" + str(snakemake.params.trailing) + " SLIDINGWINDOW:" + str(snakemake.params.slid_w_1) + ":" + str(snakemake.params.slid_w_2) + " MINLEN:" + str(snakemake.params.minlen) + "\
         " + trim_left + " -Xmx" + str(snakemake.resources.mem) + "g >> " + snakemake.params.trim_stats + " 2>&1 "
 
-    f = open(snakemake.log.run, 'at')
+    f = open(log_filename, 'at')
     f.write("## COMMAND: " + command + "\n")
     f.close()
     shell(command)

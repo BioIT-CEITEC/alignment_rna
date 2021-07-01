@@ -2,38 +2,33 @@
 # wrapper for rule: preprocess_SE
 ######################################
 import os
-import sys
-import math
 import subprocess
-import re
 from snakemake.shell import shell
-
-TOOL = "trimmomatic"
-SEQTK = "seqtk"
-
 shell.executable("/bin/bash")
+log_filename = str(snakemake.log)
 
-f = open(snakemake.log.run, 'a+')
+
+f = open(log_filename, 'a+')
 f.write("\n##\n## RULE: preprocess_SE \n##\n")
 f.close()
 
-version = str(subprocess.Popen(TOOL+" -version 2>&1 ", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
-f = open(snakemake.log.run, 'at')
+version = str(subprocess.Popen("trimmomatic -version 2>&1 ", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
+f = open(log_filename, 'at')
 f.write("## VERSION: trimmomatic "+version+"\n")
 f.close()
 
 if int(snakemake.params.trim_left1) > 0 or int(snakemake.params.trim_right1) > 0:
   # the analysis needs explicit trimming
-  version = str(subprocess.Popen(SEQTK+" 2>&1 | grep \"[Vv]ersion\" | cut -f 2- -d \" \" ", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
-  f = open(snakemake.log.run, 'at')
+  version = str(subprocess.Popen("seqtk 2>&1 | grep \"[Vv]ersion\" | cut -f 2- -d \" \" ", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
+  f = open(log_filename, 'at')
   f.write("## VERSION: seqtk "+version+"\n")
   f.close()
 
   extra_flags_seqtk =  " -b "+str(snakemake.params.trim_left1) if int(snakemake.params.trim_left1) > 0 else ""
   extra_flags_seqtk += " -e "+str(snakemake.params.trim_right1) if int(snakemake.params.trim_right1) > 0 else ""
 
-  command = SEQTK+" trimfq "+extra_flags_seqtk+" "+snakemake.input.raw+" | gzip -c > "+snakemake.input.raw.replace(".gz",".trim.gz")
-  f = open(snakemake.log.run, 'at')
+  command = "seqtk trimfq "+extra_flags_seqtk+" "+snakemake.input.raw+" | gzip -c > "+snakemake.input.raw.replace(".gz",".trim.gz")
+  f = open(log_filename, 'at')
   f.write("## COMMAND: "+command+"\n")
   f.close()
   shell(command)
@@ -63,19 +58,19 @@ trim_left = "" # HARD DEFAULT, as this is no longer in use, but might be in the 
 input_r1 = snakemake.input.raw.replace(".gz",".trim.gz") if int(snakemake.params.trim_left1) > 0 or int(snakemake.params.trim_right1) > 0 else snakemake.input.raw
 
 
-command = TOOL+" SE -threads "+str(snakemake.threads)+" "+snakemake.params.phred+" "+input_r1+" "+snakemake.output.clean+"\
+command = "trimmomatic SE -threads "+str(snakemake.threads)+" "+snakemake.params.phred+" "+input_r1+" "+snakemake.output.clean+"\
     "+adaptors+" CROP:"+str(snakemake.params.crop)+" LEADING:"+str(snakemake.params.leading)+"\
     TRAILING:"+str(snakemake.params.trailing)+" SLIDINGWINDOW:"+str(snakemake.params.slid_w_1)+":"+str(snakemake.params.slid_w_2)+" MINLEN:"+str(snakemake.params.minlen)+"\
     "+trim_left+" -Xmx"+str(snakemake.resources.mem)+"g >> "+snakemake.log.trim+" 2>&1 "
 
-f = open(snakemake.log.run, 'at')
+f = open(log_filename, 'at')
 f.write("## COMMAND: "+command+"\n")
 f.close()
 shell(command)
 
 if int(snakemake.params.trim_left1) > 0 or int(snakemake.params.trim_right1) > 0:
-  command = "rm "+snakemake.input.raw.replace(".gz",".trim.gz")+" >> "+snakemake.log.run+" 2>&1 "
-  f = open(snakemake.log.run, 'at')
+  command = "rm "+snakemake.input.raw.replace(".gz",".trim.gz")+" >> "+log_filename+" 2>&1 "
+  f = open(log_filename, 'at')
   f.write("## COMMAND: "+command+"\n")
   f.close()
   shell(command)
