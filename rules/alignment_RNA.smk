@@ -30,7 +30,7 @@ rule alignment_RNA:
     output:
         bam = "mapped/{sample}.not_markDups.bam",
         bai = "mapped/{sample}.not_markDups.bam.bai",
-        transcriptom_bam = "mapped/{sample}.transcriptome.bam"
+        transcriptom_bam = "mapped/transcriptome/{sample}.transcriptome.bam"
     log: "logs/{sample}/alignment.log"
     threads: 40
     resources:  mem = 34
