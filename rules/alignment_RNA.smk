@@ -31,10 +31,11 @@ rule mark_duplicates:
 
 
 def alignment_RNA_input(wildcards):
-    if config["trim_adapters"] == True or config["trim_quality"] == True:
-        preprocessed = "cleaned_fastq"
-    else:
-        preprocessed = "raw_fastq"
+    # if config["trim_adapters"] = True or config["trim_quality"] == True:
+    #     preprocessed = "cleaned_fastq"
+    # else:
+    #     preprocessed = "raw_fastq"
+    preprocessed = "cleaned_fastq"
     if read_pair_tags == [""]:
         return os.path.join(preprocessed,"{sample}.fastq.gz")
     else:
@@ -73,29 +74,29 @@ rule alignment_RNA:
     script: "../wrappers/alignment_RNA/script.py"
 
 
-# rule preprocess:
-#     input: raw = expand("raw_fastq/{sample}{read_pair_tags}.fastq.gz",read_pair_tags = read_pair_tags),
-#     output: cleaned = expand("cleaned_fastq/{sample}{read_pair_tags}.fastq.gz",read_pair_tags = read_pair_tags),
-#     log:    "sample_logs/{sample}/pre_alignment_processing.log"
-#     threads:    10
-#     resources:  mem = 10
-#     params: adaptors = config["adaptors"],
-#             r1u = "trimmed/{sample}_R1.discarded.fastq.gz",
-#             r2u = "trimmed/{sample}_R2.discarded.fastq.gz",
-#             trim_left1 = config["trim_left1"], # Applied only if trim left is true, trimming from R1 (different for classic:0, quant:10, sense:9)
-#             trim_right1 = config["trim_right1"], # Applied only if trim right is true, trimming from R1; you should allow this if you want to trim the last extra base and TRIM_LE is true as RD_LENGTH is not effective
-#             trim_left2 = config["trim_left2"], # Applied only if trim left is true, trimming from R2 (different for classic:0, quant:?, sense:7)
-#             trim_right2 = config["trim_right2"], # Applied only if trim right is true, trimming from R2; you should allow this if you want to trim the last extra base and TRIM_LE is true as RD_LENGTH is not effective
-#             phred = "-phred33",
-#             leading = 3,
-#             trailing = 3,
-#             crop = 250,
-#             minlen = config["min_length"],
-#             slid_w_1 = 4,
-#             slid_w_2 = 5,
-#             trim_stats = "trimmed/{sample}.PE.trim_stats.log"
-#     conda:  "../wrappers/preprocess/env.yaml"
-#     script: "../wrappers/preprocess/script.py"
+rule preprocess:
+    input: raw = expand("raw_fastq/{{sample}}{read_pair_tags}.fastq.gz",read_pair_tags = read_pair_tags),
+    output: cleaned = expand("cleaned_fastq/{{sample}}{read_pair_tags}.fastq.gz",read_pair_tags = read_pair_tags),
+    log:    "sample_logs/{sample}/pre_alignment_processing.log"
+    threads:    10
+    resources:  mem = 10
+    params: adaptors = config["trim_adapters"],
+            r1u = "trimmed/{sample}_R1.discarded.fastq.gz",
+            r2u = "trimmed/{sample}_R2.discarded.fastq.gz",
+            trim_left1 = config["trim_left1"], # Applied only if trim left is true, trimming from R1 (different for classic:0, quant:10, sense:9)
+            trim_right1 = config["trim_right1"], # Applied only if trim right is true, trimming from R1; you should allow this if you want to trim the last extra base and TRIM_LE is true as RD_LENGTH is not effective
+            trim_left2 = config["trim_left2"], # Applied only if trim left is true, trimming from R2 (different for classic:0, quant:?, sense:7)
+            trim_right2 = config["trim_right2"], # Applied only if trim right is true, trimming from R2; you should allow this if you want to trim the last extra base and TRIM_LE is true as RD_LENGTH is not effective
+            phred = "-phred33",
+            leading = 3,
+            trailing = 3,
+            crop = 250,
+            minlen = config["min_length"],
+            slid_w_1 = 4,
+            slid_w_2 = 5,
+            trim_stats = "trimmed/{sample}.PE.trim_stats.log"
+    conda:  "../wrappers/preprocess/env.yaml"
+    script: "../wrappers/preprocess/script.py"
 
 # def test_func(wildcards):
 #     trim_left1 = cfg.loc[cfg[SAMPLE] == wildcards.sample,"trim_left1"].min()

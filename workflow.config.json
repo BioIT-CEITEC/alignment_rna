@@ -35,6 +35,20 @@
           "Qiaseq": "Qiaseq"
         }
       },
+      "RNAseq_type" : {
+        "label": "RNAseq type",
+        "type": "enum",
+        "default": "classic_rev",
+        "list": {
+          "classic_unstd": "Classic Unstranded",
+          "classic_fwd": "Classic Forward",
+          "classic_rev": "Classic Reverse",
+          "quant_fwd": "QuantSeq FWD",
+          "quant_rev": "QuantSeq REV",
+          "sense": "Lexogen SENSE",
+          "corall": "Lexogen CORALL"
+        }
+      },
       "umi_usage": {
         "label": "UMI usage",
         "type": "enum",
@@ -147,8 +161,8 @@
     "detailed": {
       "trim_adapters": {
         "label": "Trim adapters",
-        "type": "bool",
-        "default": false
+        "type": "string",
+        "default": ""
       },
       "mark_duplicates": {
         "label": "Mark duplicates",
