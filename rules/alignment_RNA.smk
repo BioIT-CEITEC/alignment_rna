@@ -81,8 +81,8 @@ rule preprocess:
     threads:    10
     resources:  mem = 10
     params: adaptors = config["trim_adapters"],
-            r1u = "trimmed/{sample}_R1.discarded.fastq.gz",
-            r2u = "trimmed/{sample}_R2.discarded.fastq.gz",
+            r1u = "cleaned_fastq/trimmed/{sample}_R1.discarded.fastq.gz",
+            r2u = "cleaned_fastq/trimmed/{sample}_R2.discarded.fastq.gz",
             trim_left1 = config["trim_left1"], # Applied only if trim left is true, trimming from R1 (different for classic:0, quant:10, sense:9)
             trim_right1 = config["trim_right1"], # Applied only if trim right is true, trimming from R1; you should allow this if you want to trim the last extra base and TRIM_LE is true as RD_LENGTH is not effective
             trim_left2 = config["trim_left2"], # Applied only if trim left is true, trimming from R2 (different for classic:0, quant:?, sense:7)
@@ -94,7 +94,7 @@ rule preprocess:
             minlen = config["min_length"],
             slid_w_1 = 4,
             slid_w_2 = 5,
-            trim_stats = "trimmed/{sample}.PE.trim_stats.log"
+            trim_stats = "qc_reports/{sample}/trimmomatic/trimmomatic_stats.log"
     conda:  "../wrappers/preprocess/env.yaml"
     script: "../wrappers/preprocess/script.py"
 

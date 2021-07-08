@@ -153,7 +153,7 @@ if hasattr(snakemake.output, 'transcriptom_bam'):
     # Prepare for RSEM: sort transcriptome BAM to ensure the order of the reads, to make RSEM output (not pme) deterministic
 
     #if snakemake.params.pair == "SE":
-    if snakemake.wildcards.paired == "SE":
+    if snakemake.params.paired == "SE":
         command = "cat <( samtools view -H " +snakemake.output.transcriptom_bam+" ) <( samtools view -@ " +str(snakemake.threads)+ " " + snakemake.output.transcriptom_bam +" | " + \
                 "sort -S "+ str(snakemake.resources.mem)+"G -T ./ ) | samtools view -@ " + str(snakemake.threads)+" -b - > " + snakemake.output.transcriptom_bam+".tmp"
     else:

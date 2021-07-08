@@ -66,8 +66,14 @@ simpleClipThreshold = 10
 trim_left = "" # HARD DEFAULT, as this is no longer in use, but might be in the future
 #trim_left = "" if snakemake.params.trim_left == "" else "HEADCROP:"+snakemake.params.trim_left
 
+command = "mkdir -p " + os.path.dirname(snakemake.params.trim_stats)
+f = open(log_filename, 'at')
+f.write("## COMMAND: " + command + "\n")
+f.close()
+shell(command)
+
 if is_paired:
-    if snakemake.params.adaptors != "null":
+    if snakemake.params.adaptors != "":
         adaptors = snakemake.params.adaptors.split(",")
         with open(os.path.dirname(fastq_c2) + "/adapters.fa", "w") as adaptor_file:
             for i, adaptor in enumerate(adaptors):
@@ -80,10 +86,18 @@ if is_paired:
                 if (len(adaptor.split("-")[1]) < 20):
                     simpleClipThreshold = min(len(adaptor.split("-")[1]) // 2, simpleClipThreshold)
 
-    adaptors = "" if snakemake.params.adaptors == "null" else "ILLUMINACLIP:" + os.path.dirname(fastq_c2) + "/adapters.fa:2:30:" + str(simpleClipThreshold) + ":3:true"
+        adaptors = "ILLUMINACLIP:" + os.path.dirname(fastq_c2) + "/adapters.fa:2:30:" + str(simpleClipThreshold) + ":3:true"
+    else:
+        adaptors = ""
 
     input_r1 = fastq_r1.replace(".gz",".trim.gz") if int(snakemake.params.trim_left1) > 0 or int(snakemake.params.trim_right1) > 0 else fastq_r1
     input_r2 = fastq_r2.replace(".gz",".trim.gz") if int(snakemake.params.trim_left2) > 0 or int(snakemake.params.trim_right2) > 0 else fastq_r2
+
+    command = "mkdir -p " + os.path.dirname(snakemake.params.r1u)
+    f = open(log_filename, 'at')
+    f.write("## COMMAND: " + command + "\n")
+    f.close()
+    shell(command)
 
     command = "trimmomatic PE -threads "+str(snakemake.threads)+" "+snakemake.params.phred+" "+input_r1+" "+input_r2+" "+fastq_c1+"\
         "+snakemake.params.r1u+" "+fastq_c2+" "+snakemake.params.r2u+" CROP:"+str(snakemake.params.crop)+" LEADING:"+str(snakemake.params.leading)+"\
@@ -97,9 +111,9 @@ if is_paired:
 
 
 else:
-    if snakemake.params.adaptors != "null":
+    if snakemake.params.adaptors != "":
         adaptors = snakemake.params.adaptors.split(",")
-        with open(os.path.dirname(snakemake.output.clean) + "/adapters.fa", "w") as adaptor_file:
+        with open(os.path.dirname(fastq_c1) + "/adapters.fa", "w") as adaptor_file:
             for i, adaptor in enumerate(adaptors):
                 if adaptor.split("-")[0] == "1":
                     adaptor_file.write(">adapt" + str(i) + "\n")
@@ -112,11 +126,13 @@ else:
                     if (len(adaptor) < 20):
                         simpleClipThreshold = min(len(adaptor) // 2, simpleClipThreshold)
 
-    adaptors = "" if snakemake.params.adaptors == "null" else "ILLUMINACLIP:" + os.path.dirname(snakemake.output.clean) + "/adapters.fa:2:30:" + str(simpleClipThreshold) + ":3"
+        adaptors = "ILLUMINACLIP:" + os.path.dirname(fastq_c1) + "/adapters.fa:2:30:" + str(simpleClipThreshold) + ":3"
+    else:
+        adaptors = ""
 
     input_r1 = fastq_r1.replace(".gz", ".trim.gz") if int(snakemake.params.trim_left1) > 0 or int(snakemake.params.trim_right1) > 0 else fastq_r1
 
-    command = TOOL + " SE -threads " + str(snakemake.threads) + " " + snakemake.params.phred + " " + input_r1 + " " + fastq_c1 + "\
+    command = "trimmomatic SE -threads " + str(snakemake.threads) + " " + snakemake.params.phred + " " + input_r1 + " " + fastq_c1 + "\
         " + adaptors + " CROP:" + str(snakemake.params.crop) + " LEADING:" + str(snakemake.params.leading) + "\
         TRAILING:" + str(snakemake.params.trailing) + " SLIDINGWINDOW:" + str(snakemake.params.slid_w_1) + ":" + str(snakemake.params.slid_w_2) + " MINLEN:" + str(snakemake.params.minlen) + "\
         " + trim_left + " -Xmx" + str(snakemake.resources.mem) + "g >> " + snakemake.params.trim_stats + " 2>&1 "
