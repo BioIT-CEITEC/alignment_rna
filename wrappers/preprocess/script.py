@@ -116,7 +116,7 @@ else:
 
     input_r1 = fastq_r1.replace(".gz", ".trim.gz") if int(snakemake.params.trim_left1) > 0 or int(snakemake.params.trim_right1) > 0 else fastq_r1
 
-    command = TOOL + " SE -threads " + str(snakemake.threads) + " " + snakemake.params.phred + " " + input_r1 + " " + fastq_c1 + "\
+    command = "trimmomatic SE -threads " + str(snakemake.threads) + " " + snakemake.params.phred + " " + input_r1 + " " + fastq_c1 + "\
         " + adaptors + " CROP:" + str(snakemake.params.crop) + " LEADING:" + str(snakemake.params.leading) + "\
         TRAILING:" + str(snakemake.params.trailing) + " SLIDINGWINDOW:" + str(snakemake.params.slid_w_1) + ":" + str(snakemake.params.slid_w_2) + " MINLEN:" + str(snakemake.params.minlen) + "\
         " + trim_left + " -Xmx" + str(snakemake.resources.mem) + "g >> " + snakemake.params.trim_stats + " 2>&1 "
