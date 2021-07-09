@@ -15,7 +15,13 @@ f = open(log_filename, 'at')
 f.write("## VERSION: "+version+"\n")
 f.close()
 
-mapped_count = str(subprocess.Popen("samtools view "+str(snakemake.input.bam)+" | head -20 | wc -l",shell=True,stdout=subprocess.PIPE).communicate()[0], 'utf-8')
+
+command = "samtools view "+str(snakemake.input.bam)+" | head -20 | wc -l"
+mapped_count = str(subprocess.Popen(command,shell=True,stdout=subprocess.PIPE).communicate()[0], 'utf-8')
+with open(log_filename, 'at') as f:
+    f.write("## COMMAND: " + command + "\n")
+
+# mapped_count = str(subprocess.Popen("samtools view "+str(snakemake.input.bam)+" | head -20 | wc -l 2> /dev/null",shell=True,stdout=subprocess.PIPE).communicate()[0], 'utf-8')
 
 if int(mapped_count) >= 5:
 	# bamCoverage -b $i -o ${i%.bam}.bg -of bedgraph -p 20
