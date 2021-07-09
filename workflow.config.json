@@ -17,92 +17,10 @@
   ],
   "gui_params": {
     "primary": {
-      "UMI": {
-        "label": "UMI",
-        "type": "enum",
-        "default": "no_umi",
-        "list": {
-          "no_umi": "No UMI",
-          "BRONCO": "BRONCO",
-          "Quantseq FWD": "Quantseq FWD",
-          "CORALL": "CORALL",
-          "custom_umi": "Custom specified UMI",
-          "CS_UMI": "CS_UMI",
-          "CS_UMI_sep_file": "CS_UMI_sep_file",
-          "IDT": "IDT",
-          "BRB": "BRB",
-          "LYNX": "LYNX",
-          "Qiaseq": "Qiaseq"
-        }
-      },
-      "RNAseq_type" : {
-        "label": "RNAseq type",
-        "type": "enum",
-        "default": "classic_rev",
-        "list": {
-          "classic_unstd": "Classic Unstranded",
-          "classic_fwd": "Classic Forward",
-          "classic_rev": "Classic Reverse",
-          "quant_fwd": "QuantSeq FWD",
-          "quant_rev": "QuantSeq REV",
-          "sense": "Lexogen SENSE",
-          "corall": "Lexogen CORALL"
-        }
-      },
-      "umi_usage": {
-        "label": "UMI usage",
-        "type": "enum",
-        "default": "mark_duplicates",
-        "list": {
-          "no": "Don't use UMI",
-          "mark_duplicates": "Mark duplicates",
-          "umi_concensus": "UMI concensus"
-        },
-        "conditions": {
-          "relevance": {
-            "operand": "equal",
-            "negation": true,
-            "values": {
-              "UMI": "no_umi"
-            }
-          }
-        }
-      },
-      "lib_ROI": {
-        "label": "Regions of interest",
-        "type": "enum",
-        "default": "wgs",
-        "list": {
-          "wgs": "WGS or no DNA panel",
-          "GRCh37-p13": {
-            "TP53_amplicon": "TP53 amplicon",
-            "BRONCO": "BRONCO",
-            "MedExome_GRCh37": "MedExome GRCh37",
-            "TruSeq_Exome": "TruSeq Exome",
-            "OncoZoom": "OncoZoom"
-          },
-          "GRCh38-p10": {
-            "cosimo_amplicon": "cosimo_amplicon",
-            "MedExome_GRCh38": "MedExome_GRCh38",
-            "QIAseq": "QIAseq",
-            "RNA": "RNA",
-            "uni_exome": "uni_exome"
-          }
-        }
-      },
       "reference": {
         "label": "Genomic Reference",
         "type": "enum",
         "default": "GRCh38-p10",
-        "conditions": {
-          "relevance": {
-            "operand": "equal",
-            "negation": false,
-            "values": {
-              "lib_ROI": "wgs"
-            }
-          }
-        },
         "list": {
           "Homo sapiens": {
             "GRCh37-p13": "GRCh37-p13",
@@ -157,6 +75,20 @@
           }
         }
       },
+      "RNAseq_type" : {
+        "label": "RNAseq type",
+        "type": "enum",
+        "default": "classic_rev",
+        "list": {
+          "classic_unstd": "Classic Unstranded",
+          "classic_fwd": "Classic Forward",
+          "classic_rev": "Classic Reverse",
+          "quant_fwd": "QuantSeq FWD",
+          "quant_rev": "QuantSeq REV",
+          "sense": "Lexogen SENSE",
+          "corall": "Lexogen CORALL"
+        }
+      },
       "type_of_extraction": {
         "label": "Type of extraction",
         "type": "enum",
@@ -182,6 +114,15 @@
         "label": "Trim quality",
         "type": "bool",
         "default": false
+      },
+      "umi_usage": {
+        "label": "UMI usage",
+        "type": "enum",
+        "default": "mark_duplicates",
+        "list": {
+          "no": "Don't use UMI",
+          "mark_duplicates": "Mark duplicates"
+        }
       },
       "remove_duplicates": {
         "label": "Remove duplicates",
