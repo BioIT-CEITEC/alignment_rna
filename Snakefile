@@ -8,10 +8,10 @@ min_version("5.18.0")
 GLOBAL_REF_PATH = "/mnt/references/"
 
 # setting organism from reference
-f = open(os.path.join(GLOBAL_REF_PATH,"reference_info","genomic_references.json"),)
+f = open(os.path.join(GLOBAL_REF_PATH,"reference_info","references.json"),)
 reference_dict = json.load(f)
 f.close()
-config["organism"] = [organism_name for organism_name in reference_dict.keys() if isinstance(reference_dict[organism_name],dict) and config["reference"] in reference_dict[organism_name].values()][0]
+config["organism"] = [organism_name.lower().replace(" ","_") for organism_name in reference_dict.keys() if isinstance(reference_dict[organism_name],dict) and config["reference"] in reference_dict[organism_name].values()][0]
 
 ##### Config processing #####
 # Folders
