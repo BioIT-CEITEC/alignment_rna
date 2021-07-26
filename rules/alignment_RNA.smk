@@ -1,11 +1,11 @@
 
 
 rule alignment_RNA_multiqc:
-    input:  markDups = expand("qc_reports/{sample}/MarkDuplicates/{sample}.markDups_metrics.txt",sample = sample_tab.sample_name),
-            bam = expand("mapped/{sample}.bam",sample = sample_tab.sample_name),
-            star = expand("mapped/{sample}/{sample}_STARgenome/",sample = sample_tab.sample_name)
+    input: bam = expand("mapped/{sample}.bam",sample = sample_tab.sample_name),
     output: html="qc_reports/alignment_RNA_multiqc/multiqc.html"
     log: "logs/alignment_RNA_multiqc.log"
+    params: mtx = "qc_reports/{sample}/MarkDuplicates/{sample}.markDups_metrics.txt",
+            star = "/mapped/{sample}/{sample}_STARgenome/"
     conda: "../wrappers/alignment_RNA_multiqc/env.yaml"
     script: "../wrappers/alignment_RNA_multiqc/script.py"
 
