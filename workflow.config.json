@@ -57,8 +57,8 @@
     "detailed": {
       "trim_adapters": {
         "label": "Trim adapters",
-        "type": "bool",
-        "default": false
+        "type": "string",
+        "default": ""
       },
       "mark_duplicates": {
         "label": "Mark duplicates",
