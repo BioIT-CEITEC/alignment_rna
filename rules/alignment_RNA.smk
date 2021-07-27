@@ -2,10 +2,8 @@
 
 rule alignment_RNA_multiqc:
     input: bam = expand("mapped/{sample}.bam",sample = sample_tab.sample_name),
-    output: html="qc_reports/alignment_RNA_multiqc/multiqc.html"
-    log: "logs/alignment_RNA_multiqc.log"
-    params: mtx = "qc_reports/{sample}/MarkDuplicates/{sample}.markDups_metrics.txt",
-            star = "/mapped/{sample}/{sample}_STARgenome/"
+    output: html="qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html"
+    log: "logs/all_samples/alignment_RNA_multiqc.log"
     conda: "../wrappers/alignment_RNA_multiqc/env.yaml"
     script: "../wrappers/alignment_RNA_multiqc/script.py"
 

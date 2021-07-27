@@ -40,7 +40,7 @@ rule all:
         expand("mapped/{sample}.bam.bai", sample = sample_tab.sample_name),
         expand("mapped/{sample}.bigWig",sample = sample_tab.sample_name),
         expand("mapped/{sample}.bedGraph",sample = sample_tab.sample_name),
-        "qc_reports/alignment_RNA_multiqc/multiqc.html"
+        "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html"
 
 ##### Modules #####
 
