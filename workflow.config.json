@@ -7,7 +7,7 @@
     "inputs": "raw_fastq/{sample}*fastq.gz",
     "outputs": [
       "cleaned_fastq/{sample}*fastq.gz",
-      "sample_logs/{sample}/*",
+      "logs/{sample}/*",
       "mapped/*",
       "qc_reports/*"
     ],
