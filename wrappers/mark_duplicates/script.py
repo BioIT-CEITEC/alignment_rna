@@ -48,17 +48,6 @@ if snakemake.params.mark_duplicates == True:
         f.close()
         shell(command)
 
-        command = "rm "+snakemake.input.bam
-        f = open(log_filename, 'at')
-        f.write("## COMMAND: "+command+"\n")
-        f.close()
-        shell(command)
-
-        command = "rm "+snakemake.input.bam + ".bai"
-        f = open(log_filename, 'at')
-        f.write("## COMMAND: "+command+"\n")
-        f.close()
-        shell(command)
 
     else:
 
@@ -93,6 +82,7 @@ if snakemake.params.mark_duplicates == True:
         f.write("## COMMAND: " + command + "\n")
         f.close()
         shell(command)
+
 else:
 
     shell("mv -T " + snakemake.input.bam + " " + snakemake.output.bam)

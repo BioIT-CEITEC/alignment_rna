@@ -7,8 +7,8 @@
     "inputs": "raw_fastq/{sample}*fastq.gz",
     "outputs": [
       "cleaned_fastq/{sample}*fastq.gz",
-      "logs/{sample}/*",
       "mapped/*",
+      "logs/{sample}/*",
       "qc_reports/*"
     ],
     "report_index": "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html",

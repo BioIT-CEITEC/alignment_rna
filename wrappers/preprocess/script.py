@@ -42,22 +42,22 @@ if int(snakemake.params.trim_left1) > 0 or int(snakemake.params.trim_right1) > 0
     extra_flags_seqtk =  " -b "+str(snakemake.params.trim_left1) if int(snakemake.params.trim_left1) > 0 else ""
     extra_flags_seqtk += " -e "+str(snakemake.params.trim_right1) if int(snakemake.params.trim_right1) > 0 else ""
 
-command = "seqtk trimfq "+extra_flags_seqtk+" "+fastq_r1+" | gzip -c > "+fastq_r1.replace(".gz",".trim.gz")
-f = open(log_filename, 'at')
-f.write("## COMMAND: "+command+"\n")
-f.close()
-shell(command)
+    command = "seqtk trimfq "+extra_flags_seqtk+" "+fastq_r1+" | gzip -c > "+fastq_r1.replace(".gz",".trim.gz")
+    f = open(log_filename, 'at')
+    f.write("## COMMAND: "+command+"\n")
+    f.close()
+    shell(command)
 
 if is_paired:
     if int(snakemake.params.trim_left2) > 0 or int(snakemake.params.trim_right2) > 0:
         extra_flags_seqtk =  " -b "+str(snakemake.params.trim_left2) if int(snakemake.params.trim_left2) > 0 else ""
         extra_flags_seqtk += " -e "+str(snakemake.params.trim_right2) if int(snakemake.params.trim_right2) > 0 else ""
 
-    command = "seqtk trimfq "+extra_flags_seqtk+" "+fastq_r2+" | gzip -c > "+fastq_r2.replace(".gz",".trim.gz")
-    f = open(log_filename, 'at')
-    f.write("## COMMAND: "+command+"\n")
-    f.close()
-    shell(command)
+        command = "seqtk trimfq "+extra_flags_seqtk+" "+fastq_r2+" | gzip -c > "+fastq_r2.replace(".gz",".trim.gz")
+        f = open(log_filename, 'at')
+        f.write("## COMMAND: "+command+"\n")
+        f.close()
+        shell(command)
 
 simpleClipThreshold = 10
 # TODO: check for better settings (see: http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf starting at page 5, or http://www.usadellab.org/cms/?page=trimmomatic)
