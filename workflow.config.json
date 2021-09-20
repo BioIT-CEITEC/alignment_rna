@@ -166,10 +166,10 @@
         "type": "string",
         "default": "0.66"
       },
-        "perc_mismatch": {
-          "label": "Perc mismatch",
-          "type": "string",
-          "default": "0.66"
+      "perc_mismatch": {
+        "label": "Perc mismatch",
+        "type": "string",
+        "default": "0.66"
       },
       "min_length": {
         "label": "Min length",
