@@ -25,15 +25,9 @@ f = open(log_filename, 'wt')
 f.write("\n##\n## RULE: raw_fastq_qc \n##\n")
 f.close()
 
-version = str(subprocess.Popen("trimmomatic preprocess_SE -version 2>&1 ", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
+version = str(subprocess.Popen("conda list ", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
 f = open(log_filename, 'at')
-f.write("## VERSION: trimmomatic "+version+"\n")
-f.close()
-
-
-version = str(subprocess.Popen("seqtk 2>&1 | grep \"[Vv]ersion\" | cut -f 2- -d \" \" ", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
-f = open(log_filename, 'at')
-f.write("## VERSION: seqtk "+version+"\n")
+f.write("## CONDA: "+version+"\n")
 f.close()
 
 

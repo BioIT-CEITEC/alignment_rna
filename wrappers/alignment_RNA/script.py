@@ -12,14 +12,9 @@ f = open(log_filename, 'a+')
 f.write("\n##\n## RULE: alignment_RNA \n##\n")
 f.close()
 
-version = str(subprocess.Popen("STAR --version 2>&1", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
+version = str(subprocess.Popen("conda list ", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
 f = open(log_filename, 'at')
-f.write("## VERSION: "+version+"\n")
-f.close()
-
-version = str(subprocess.Popen("samtools --version 2>&1 | grep samtools", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
-f = open(log_filename, 'at')
-f.write("## VERSION: "+version+"\n")
+f.write("## CONDA: "+version+"\n")
 f.close()
 
 command = "mkdir -p "+snakemake.params.prefix+" >> "+log_filename+" 2>&1"

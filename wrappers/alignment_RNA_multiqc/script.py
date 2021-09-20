@@ -10,9 +10,9 @@ f = open(log_filename, 'wt')
 f.write("\n##\n## RULE: alignment_RNA_multiqc \n##\n")
 f.close()
 
-version = str(subprocess.Popen("multiqc --version 2>&1 ",shell=True,stdout=subprocess.PIPE).communicate()[0], 'utf-8')
+version = str(subprocess.Popen("conda list ", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
 f = open(log_filename, 'at')
-f.write("## VERSION: "+version+"\n")
+f.write("## CONDA: "+version+"\n")
 f.close()
 
 multiqc_search_paths = "./qc_reports/*/MarkDuplicates/*" + " ./mapped/*" + " ./mapped/*/*_STARgenome/*"

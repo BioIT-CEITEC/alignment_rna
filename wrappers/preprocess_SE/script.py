@@ -12,17 +12,13 @@ f = open(log_filename, 'a+')
 f.write("\n##\n## RULE: preprocess_SE \n##\n")
 f.close()
 
-version = str(subprocess.Popen("trimmomatic -version 2>&1 ", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
+version = str(subprocess.Popen("conda list ", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
 f = open(log_filename, 'at')
-f.write("## VERSION: trimmomatic "+version+"\n")
+f.write("## CONDA: "+version+"\n")
 f.close()
 
 if int(snakemake.params.trim_left1) > 0 or int(snakemake.params.trim_right1) > 0:
   # the analysis needs explicit trimming
-  version = str(subprocess.Popen("seqtk 2>&1 | grep \"[Vv]ersion\" | cut -f 2- -d \" \" ", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
-  f = open(log_filename, 'at')
-  f.write("## VERSION: seqtk "+version+"\n")
-  f.close()
 
   extra_flags_seqtk =  " -b "+str(snakemake.params.trim_left1) if int(snakemake.params.trim_left1) > 0 else ""
   extra_flags_seqtk += " -e "+str(snakemake.params.trim_right1) if int(snakemake.params.trim_right1) > 0 else ""
