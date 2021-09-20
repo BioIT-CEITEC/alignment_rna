@@ -24,15 +24,6 @@
   ],
   "gui_params": {
     "primary": {
-      "computing_type": {
-        "label": "Computing type",
-        "type": "enum",
-        "default": "local",
-        "list": {
-          "local": "local",
-          "kubernetes": "kubernetes"
-        }
-      },
       "reference": {
         "label": "Genomic Reference",
         "type": "enum",
