@@ -21,10 +21,12 @@ rule get_cov_tracks:
 rule mark_duplicates:
     input:  bam = fetch_data("mapped/{sample}.not_markDups.bam"),
             bai = fetch_data("mapped/{sample}.not_markDups.bam.bai"),
-            transcriptom_bam= fetch_data("mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"),
+            transcriptom_bam = fetch_data("mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"),
+            transcriptom_bai = fetch_data("mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai"),
     output: bam = fetch_data("mapped/{sample}.bam"),
             bai = fetch_data("mapped/{sample}.bam.bai"),
-            transcriptom_bam = fetch_data("mapped/transcriptome/{sample}.transcriptome.bam")
+            transcriptom_bam = fetch_data("mapped/transcriptome/{sample}.transcriptome.bam"),
+            transcriptom_bai = fetch_data("mapped/transcriptome/{sample}.transcriptome.bam.bai"),
     log: fetch_data("logs/{sample}/mark_duplicates.log")
     threads:  8
     resources:  mem = 15
@@ -63,7 +65,8 @@ rule alignment_RNA:
     output:
         bam = fetch_data("mapped/{sample}.not_markDups.bam"),
         bai = fetch_data("mapped/{sample}.not_markDups.bam.bai"),
-        transcriptom_bam = fetch_data("mapped/transcriptome/{sample}.not_markDups.transcriptome.bam")
+        transcriptom_bam = fetch_data("mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"),
+        transcriptom_bai = fetch_data("mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai"),
     log: fetch_data("logs/{sample}/alignment.log")
     threads: 40
     resources:  mem = 34

@@ -146,28 +146,18 @@ if hasattr(snakemake.output, 'transcriptom_bam'):
 
     # Sort transcriptome BAMs
     # Prepare for RSEM: sort transcriptome BAM to ensure the order of the reads, to make RSEM output (not pme) deterministic
-
-    #if snakemake.params.pair == "SE":
-    if snakemake.params.paired == "SE":
-        command = "cat <( samtools view -H " +snakemake.output.transcriptom_bam+" ) <( samtools view -@ " +str(snakemake.threads)+ " " + snakemake.output.transcriptom_bam +" | " + \
-                "sort -S "+ str(snakemake.resources.mem)+"G -T ./ ) | samtools view -@ " + str(snakemake.threads)+" -b - > " + snakemake.output.transcriptom_bam+".tmp"
-    else:
-        command = "cat <( samtools view -H " + snakemake.output.transcriptom_bam + " )" + \
-                  " <( samtools view -@ " + str(snakemake.threads) + " " + snakemake.output.transcriptom_bam + " | " + \
-                  "awk '{{line=$0; getline; printf \"%s %s\\n\",line,$0}}' | " + \
-                  "sort -S " + str(snakemake.resources.mem) + "G -T ./ | tr ' ' '\\n' ) | " + \
-                  "samtools view -@ " + str(snakemake.threads) + " -b - > " + snakemake.output.transcriptom_bam + ".tmp" + \
-                  " 2>> " + log_filename + " 2>&1"
+    command = "samtools sort "+ snakemake.output.transcriptom_bam + " -@ " + str(snakemake.threads) + " -o "+ snakemake.output.transcriptom_bam + " >> " + log_filename + " 2>&1"
     f = open(log_filename, 'at')
     f.write("## COMMAND: " + command + "\n")
     f.close()
     shell(command)
 
-    command = "mv "+snakemake.output.transcriptom_bam+".tmp " + snakemake.output.transcriptom_bam + " >> " + log_filename + " 2>&1"
+    command = "samtools index -@ " + str(snakemake.threads) + " " + snakemake.output.transcriptom_bam + " >> " + log_filename + " 2>&1 "
     f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
     shell(command)
+
 
     # Chimeric to BAM
     command = "samtools view -@ " + str(snakemake.threads) +" -b " + snakemake.params.prefix + "Chimeric.out.sam" + " | samtools sort -@ " + str(snakemake.threads) + " -T tmp.sort " + \
