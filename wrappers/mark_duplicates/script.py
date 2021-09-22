@@ -66,13 +66,13 @@ if snakemake.params.mark_duplicates == True:
 
         if snakemake.params.RSEM == True:
 
-            command = "umi_tools dedup -I " + snakemake.input.transcriptom_bam + " -S " + snakemake.output.transcriptom_bam + " --log " + snakemake.params.mtx + " --extract-umi-method=read_id --umi-separator='_' --method=directional --edit-distance-threshold=0 --spliced-is-unique --multimapping-detection-method=NH"
+            command = "umi_tools dedup -I " + snakemake.input.transcriptom_bam + " -S " + snakemake.input.transcriptom_bam.replace(".not_markDups","") + " --log " + snakemake.params.mtx + " --extract-umi-method=read_id --umi-separator='_' --method=directional --edit-distance-threshold=0 --spliced-is-unique --multimapping-detection-method=NH"
             f = open(log_filename, 'at')
             f.write("## COMMAND: " + command + "\n")
             f.close()
             shell(command)
 
-            command = "samtools index -@" + str(snakemake.threads) + " " + snakemake.output.transcriptom_bam + " >> " + log_filename + " 2>&1 "
+            command = "samtools index -@" + str(snakemake.threads) + " " + snakemake.input.transcriptom_bam.replace(".not_markDups","") + " >> " + log_filename + " 2>&1 "
             f = open(log_filename, 'at')
             f.write("## COMMAND: " + command + "\n")
             f.close()

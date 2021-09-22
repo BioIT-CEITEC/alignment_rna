@@ -17,16 +17,19 @@ rule get_cov_tracks:
     conda:  "../wrappers/get_cov_tracks/env.yaml"
     script: "../wrappers/get_cov_tracks/script.py"
 
+def mark_duplicates_input(wildcards):
+    input={}
+    input["bam"] = fetch_data("mapped/{sample}.not_markDups.bam")
+    input["bai"] = fetch_data("mapped/{sample}.not_markDups.bam.bai")
+    if config["RSEM"]:
+        config["transcriptom_bam"] = fetch_data("mapped/transcriptome/{sample}.not_markDups.transcriptome.bam")
+        config["transcriptom_bai"] = fetch_data("mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai")
+    return input
 
 rule mark_duplicates:
-    input:  bam = fetch_data("mapped/{sample}.not_markDups.bam"),
-            bai = fetch_data("mapped/{sample}.not_markDups.bam.bai"),
-            transcriptom_bam = fetch_data("mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"),
-            transcriptom_bai = fetch_data("mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai"),
+    input: unpack(mark_duplicates_input)
     output: bam = fetch_data("mapped/{sample}.bam"),
             bai = fetch_data("mapped/{sample}.bam.bai"),
-            transcriptom_bam = fetch_data("mapped/transcriptome/{sample}.transcriptome.bam"),
-            transcriptom_bai = fetch_data("mapped/transcriptome/{sample}.transcriptome.bam.bai"),
     log: fetch_data("logs/{sample}/mark_duplicates.log")
     threads:  8
     resources:  mem = 15
