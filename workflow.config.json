@@ -176,11 +176,16 @@
         "type": "int",
         "default": 35
       },
-      "RSEM": {
-        "label": "Gene count RSEM",
+      "feature_count": {
+        "label": "Feature count",
         "type": "bool",
         "default": false
-      }
+      },
+        "RSEM": {
+          "label": "Gene count RSEM",
+          "type": "bool",
+          "default": false
+        }
     }
   }
 }
