@@ -110,7 +110,7 @@ rule preprocess:
             minlen = config["min_length"],
             slid_w_1 = 4,
             slid_w_2 = 5,
-            trim_stats = fetch_data("qc_reports/{sample}/trimmomatic/trimmomatic_stats.log")
+            trim_stats = fetch_data("qc_reports/{sample}/trimmomatic/trim_stats.log")
     conda:  "../wrappers/preprocess/env.yaml"
     script: "../wrappers/preprocess/script.py"
 
