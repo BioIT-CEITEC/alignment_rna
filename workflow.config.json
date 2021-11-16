@@ -28,7 +28,7 @@
       "reference": {
         "label": "Genomic Reference",
         "type": "enum",
-        "default": "GRCh38-p10",
+        "default": "GRCh38",
         "list": ##INCLUDE:reference_info/reference.json##
       },
       "RNAseq_type" : {
