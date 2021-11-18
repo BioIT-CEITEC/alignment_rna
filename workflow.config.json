@@ -175,10 +175,10 @@
       "feature_count": {
         "label": "Feature count",
         "type": "bool",
-        "default": false
+        "default": true
       },
         "RSEM": {
-          "label": "Gene count RSEM",
+          "label": "RSEM",
           "type": "bool",
           "default": false
         }
