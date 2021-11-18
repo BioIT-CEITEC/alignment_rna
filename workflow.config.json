@@ -17,7 +17,7 @@
     ]
   },
   "general_params": [
-    "library_name",
+    "entity_name",
     "sample_name"
   ],
   "requested_params": [
@@ -28,7 +28,7 @@
       "reference": {
         "label": "Genomic Reference",
         "type": "enum",
-        "default": "GRCh38",
+        "default": "GRCh38-p10",
         "list": ##INCLUDE:reference_info/reference.json##
       },
       "RNAseq_type" : {
@@ -65,11 +65,6 @@
         "label": "Mark duplicates",
         "type": "bool",
         "default": true
-      },
-      "trim_quality": {
-        "label": "Trim quality",
-        "type": "bool",
-        "default": false
       },
       "umi_usage": {
         "label": "UMI usage",
