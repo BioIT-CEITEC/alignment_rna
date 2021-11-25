@@ -172,16 +172,11 @@
         "type": "int",
         "default": 35
       },
-      "feature_count": {
-        "label": "Feature count",
+      "RSEM": {
+        "label": "RSEM",
         "type": "bool",
-        "default": true
-      },
-        "RSEM": {
-          "label": "RSEM",
-          "type": "bool",
-          "default": false
-        }
+        "default": false
+      }
     }
   }
 }
