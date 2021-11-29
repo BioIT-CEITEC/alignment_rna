@@ -2,7 +2,7 @@
   "workflow_description": {
     "name": "alignment_RNA",
     "version": 1.0,
-    "label": "Alignment RNA",
+    "label": "Alignment RNAT",
     "type": "alignment_RNA",
     "inputs": "raw_fastq/{sample}*fastq.gz",
     "outputs": [
