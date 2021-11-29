@@ -2,7 +2,7 @@
   "workflow_description": {
     "name": "alignment_RNA",
     "version": 1.0,
-    "label": "Alignment RNAT",
+    "label": "Alignment RNA",
     "type": "alignment_RNA",
     "inputs": "raw_fastq/{sample}*fastq.gz",
     "outputs": [
@@ -21,7 +21,8 @@
     "sample_name"
   ],
   "requested_params": [
-    "is_paired"
+    "is_paired",
+    "UMI"
   ],
   "gui_params": {
     "primary": {
