@@ -29,7 +29,7 @@ shell(command)
 # else:
 #     star_index_dir = snakemake.input.index.replace("/SAindex","")
 
-star_index_dir = snakemake.input.index.replace("/SAindex","")
+star_index_dir = snakemake.input.index[0].replace("/SAindex","")
 
 f = open(log_filename, 'at')
 
