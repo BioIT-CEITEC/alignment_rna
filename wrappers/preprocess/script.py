@@ -13,13 +13,13 @@ if len(snakemake.input.raw) == 2:
     fastq_r2 = snakemake.input.raw[1]
 else:
     is_paired = False
-    fastq_r1 = snakemake.input.raw
+    fastq_r1 = snakemake.input.raw[0]
 
 if len(snakemake.output.cleaned) == 2:
     fastq_c1 = snakemake.output.cleaned[0]
     fastq_c2 = snakemake.output.cleaned[1]
 else:
-    fastq_c1 = snakemake.output.cleaned
+    fastq_c1 = snakemake.output.cleaned[0]
 
 f = open(log_filename, 'wt')
 f.write("\n##\n## RULE: raw_fastq_qc \n##\n")
