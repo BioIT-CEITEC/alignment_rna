@@ -146,7 +146,7 @@ if hasattr(snakemake.output, 'transcriptom_bam'):
 
     # Sort transcriptome BAMs
     # Prepare for RSEM: sort transcriptome BAM to ensure the order of the reads, to make RSEM output (not pme) deterministic
-    command = "samtools sort "+ snakemake.output.transcriptom_bam + " -@ " + str(snakemake.threads) + " -o "+ snakemake.output.transcriptom_bam + " >> " + log_filename + " 2>&1"
+    command = "samtools sort -n "+ snakemake.output.transcriptom_bam + " -@ " + str(snakemake.threads) + " -o "+ snakemake.output.transcriptom_bam + " >> " + log_filename + " 2>&1"
     f = open(log_filename, 'at')
     f.write("## COMMAND: " + command + "\n")
     f.close()
