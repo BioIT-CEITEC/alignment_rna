@@ -74,7 +74,7 @@ rule alignment_RNA:
     threads: 40
     resources:  mem = 34
     params:
-        prefix = "mapped/{sample}/{sample}",
+        prefix = "mapped/{sample}/{sample}.",
         strandness = config["strandness"],  #"true" or "false" - STAR parameters: strandedness, affects bedGraph (wiggle) files and XS tag in BAM
         num_mismatch= 999,  # Maximum number of mismatches; set this to high number (999) to disable and to use only perc_mismatch
         perc_mismatch= config["perc_mismatch"],
