@@ -82,8 +82,8 @@ f.write("## COMMAND: "+command+"\n")
 f.close()
 shell(command)
 
-if hasattr(snakemake.output, 'transcriptom_bam'):
-    command = "mv " + snakemake.params.prefix + "Aligned.toTranscriptome.out.bam " + snakemake.output.transcriptom_bam + " >> "+log_filename+" 2>&1 "
+if hasattr(snakemake.output, 'transcriptome_bam'):
+    command = "mv " + snakemake.params.prefix + "Aligned.toTranscriptome.out.bam " + snakemake.output.transcriptome_bam + " >> "+log_filename+" 2>&1 "
     f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
@@ -137,7 +137,7 @@ if hasattr(snakemake.output, 'transcriptom_bam'):
             shell(command)
 
             if os.stat(chr_file).st_size != 0:
-                command = "bedGraphToBigWig "+ chr_file + " " + snakemake.input.fai_ucsc[0] + " " +  bg_file.replace(".bg","") + "_chr.bigWig >> "+log_filename+" 2>&1 "
+                command = "bedGraphToBigWig "+ chr_file + " " + snakemake.input.fai_ucsc + " " +  bg_file.replace(".bg","") + "_chr.bigWig >> "+log_filename+" 2>&1 "
                 f = open(log_filename, 'at')
                 f.write("## COMMAND: "+command+"\n")
                 f.close()
@@ -146,7 +146,7 @@ if hasattr(snakemake.output, 'transcriptom_bam'):
 
     # Sort transcriptome BAMs
     # Prepare for RSEM: sort transcriptome BAM to ensure the order of the reads, to make RSEM output (not pme) deterministic
-    command = "samtools sort -n "+ snakemake.output.transcriptom_bam + " -@ " + str(snakemake.threads) + " -o "+ snakemake.output.transcriptom_bam + " >> " + log_filename + " 2>&1"
+    command = "samtools sort -n "+ snakemake.output.transcriptome_bam + " -@ " + str(snakemake.threads) + " -o "+ snakemake.output.transcriptome_bam + " >> " + log_filename + " 2>&1"
     f = open(log_filename, 'at')
     f.write("## COMMAND: " + command + "\n")
     f.close()
@@ -158,6 +158,22 @@ if hasattr(snakemake.output, 'transcriptom_bam'):
     f.close()
     shell(command)
 
+    # command = "cat <( samtools view -H " +snakemake.output.transcriptome_bam+" )" + \
+    #     " <( samtools view -@ " +str(snakemake.threads)+ " " + snakemake.output.transcriptome_bam+" | " + \
+    #     "awk '{{line=$0; getline; printf \"%s %s\\n\",line,$0}}' | " + \
+    # 		"sort -S "+ str(snakemake.resources.mem)+"G -T tmp.sort | tr ' ' '\\n' ) | " + \
+    # 		"samtools view -@ " + str(snakemake.threads)+" -b - > "+ snakemake.output.transcriptome_bam+".tmp" + \
+    # 		" 2>> " + log_filename + " 2>&1"
+    # f = open(log_filename, 'at')
+    # f.write("## COMMAND: "+command+"\n")
+    # f.close()
+    # shell(command)
+    #
+    # command = "mv "+snakemake.output.transcriptome_bam+".tmp " + snakemake.output.transcriptome_bam + " >> " +log_filename + " 2>&1"
+    # f = open(log_filename, 'at')
+    # f.write("## COMMAND: "+command+"\n")
+    # f.close()
+    # shell(command)
 
     # Chimeric to BAM
     command = "samtools view -@ " + str(snakemake.threads) +" -b " + snakemake.params.prefix + "Chimeric.out.sam" + " | samtools sort -@ " + str(snakemake.threads) + " -T tmp.sort " + \
