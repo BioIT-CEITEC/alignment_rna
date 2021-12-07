@@ -176,20 +176,20 @@ if hasattr(snakemake.output, 'transcriptome_bam'):
     # shell(command)
 
     # Chimeric to BAM
-    command = "samtools view -@ " + str(snakemake.threads) +" -b " + snakemake.params.prefix + ".Chimeric.out.sam" + " | samtools sort -@ " + str(snakemake.threads) + " -T tmp.sort " + \
+    command = "samtools view -@ " + str(snakemake.threads) +" -b " + snakemake.params.prefix + "Chimeric.out.sam" + " | samtools sort -@ " + str(snakemake.threads) + " -T tmp.sort " + \
     	"-o " + snakemake.params.prefix + "Chimeric.out.bam"  + " - >> " + log_filename + " 2>&1"
     f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
     shell(command)
 
-    command = "rm -f " + snakemake.params.prefix + ".Chimeric.out.sam" + " >> " + log_filename + " 2>&1"
+    command = "rm -f " + snakemake.params.prefix + "Chimeric.out.sam" + " >> " + log_filename + " 2>&1"
     f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
     shell(command)
 
-    command = "samtools index -@ " + str(snakemake.threads) +" "+  snakemake.params.prefix + ".Chimeric.out.bam" + " >> " + log_filename + " 2>&1"
+    command = "samtools index -@ " + str(snakemake.threads) +" "+  snakemake.params.prefix + "Chimeric.out.bam" + " >> " + log_filename + " 2>&1"
     f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
