@@ -22,8 +22,8 @@ def mark_duplicates_input(wildcards):
     input["bam"] = "mapped/{sample}.not_markDups.bam"
     input["bai"] = "mapped/{sample}.not_markDups.bam.bai"
     if config["RSEM"]:
-        config["transcriptom_bam"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"
-        config["transcriptom_bai"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai"
+        config["transcriptome_bam"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"
+        config["transcriptome_bai"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai"
     return input
 
 rule mark_duplicates:
