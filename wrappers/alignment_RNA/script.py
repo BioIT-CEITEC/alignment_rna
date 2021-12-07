@@ -110,7 +110,7 @@ f.write("## COMMAND: "+command+"\n")
 f.close()
 shell(command)
 
-if hasattr(snakemake.output, 'transcriptom_bam'):
+if hasattr(snakemake.output, 'transcriptome_bam'):
     convert_to_ucsc = os.path.abspath(os.path.dirname(__file__))+ "/convert_chromosome_names.R"
     for bg_file in glob.glob(snakemake.params.prefix + '*.bg'):
         chr_file = bg_file.replace(".bg","") + "_chr.bedGraph"
@@ -137,7 +137,7 @@ if hasattr(snakemake.output, 'transcriptom_bam'):
             shell(command)
 
             if os.stat(chr_file).st_size != 0:
-                command = "bedGraphToBigWig "+ chr_file + " " + snakemake.input.fai_ucsc + " " +  bg_file.replace(".bg","") + "_chr.bigWig >> "+log_filename+" 2>&1 "
+                command = "bedGraphToBigWig "+ chr_file + " " + snakemake.input.fai_ucsc[0] + " " +  bg_file.replace(".bg","") + "_chr.bigWig >> "+log_filename+" 2>&1 "
                 f = open(log_filename, 'at')
                 f.write("## COMMAND: "+command+"\n")
                 f.close()
@@ -152,7 +152,7 @@ if hasattr(snakemake.output, 'transcriptom_bam'):
     f.close()
     shell(command)
 
-    command = "samtools index -@ " + str(snakemake.threads) + " " + snakemake.output.transcriptom_bam + " >> " + log_filename + " 2>&1 "
+    command = "samtools index -@ " + str(snakemake.threads) + " " + snakemake.output.transcriptome_bam + " >> " + log_filename + " 2>&1 "
     f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
@@ -176,20 +176,20 @@ if hasattr(snakemake.output, 'transcriptom_bam'):
     # shell(command)
 
     # Chimeric to BAM
-    command = "samtools view -@ " + str(snakemake.threads) +" -b " + snakemake.params.prefix + "Chimeric.out.sam" + " | samtools sort -@ " + str(snakemake.threads) + " -T tmp.sort " + \
+    command = "samtools view -@ " + str(snakemake.threads) +" -b " + snakemake.params.prefix + ".Chimeric.out.sam" + " | samtools sort -@ " + str(snakemake.threads) + " -T tmp.sort " + \
     	"-o " + snakemake.params.prefix + "Chimeric.out.bam"  + " - >> " + log_filename + " 2>&1"
     f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
     shell(command)
 
-    command = "rm -f " + snakemake.params.prefix + "Chimeric.out.sam" + " >> " + log_filename + " 2>&1"
+    command = "rm -f " + snakemake.params.prefix + ".Chimeric.out.sam" + " >> " + log_filename + " 2>&1"
     f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
     shell(command)
 
-    command = "samtools index -@ " + str(snakemake.threads) +" "+  snakemake.params.prefix + "Chimeric.out.bam" + " >> " + log_filename + " 2>&1"
+    command = "samtools index -@ " + str(snakemake.threads) +" "+  snakemake.params.prefix + ".Chimeric.out.bam" + " >> " + log_filename + " 2>&1"
     f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()

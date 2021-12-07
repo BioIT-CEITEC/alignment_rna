@@ -57,7 +57,6 @@ def alignment_RNA_input(wildcards):
         return [os.path.join(preprocessed,"{sample}_R1.fastq.gz"),os.path.join(preprocessed,"{sample}_R2.fastq.gz")]
 
 
-
 rule alignment_RNA:
     input:
         fastqs = alignment_RNA_input,
@@ -84,7 +83,7 @@ rule alignment_RNA:
         map_perc= config["map_perc"], #pokud je to PE, nastavit na pevno 0.66
         map_score=config["map_score"], #pokud je to PE, nastavit na pevno 0.66
         paired = paired,
-        chim = "mapped/{sample}/{sample}.Chimeric.out.bam",
+        #chim = "mapped/{sample}/{sample}.Chimeric.out.bam",
     conda: "../wrappers/alignment_RNA/env.yaml"
     script: "../wrappers/alignment_RNA/script.py"
 
