@@ -14,6 +14,7 @@ rule get_cov_tracks:
             bg  = "mapped/{sample}.bedGraph",
     log:    "logs/{sample}/get_cov_tracks.log"
     threads:    4
+    params: tmpd = GLOBAL_TMPD_PATH
     conda:  "../wrappers/get_cov_tracks/env.yaml"
     script: "../wrappers/get_cov_tracks/script.py"
 
