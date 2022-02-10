@@ -22,8 +22,7 @@ f.write("## COMMAND: "+command+"\n")
 f.close()
 shell(command)
 
-#if isinstance(snakemake.input.bam, list):
-#    snakemake.input.bam = snakemake.input.bam[0]
+
 if snakemake.params.mark_duplicates == True:
     os.makedirs(os.path.dirname(snakemake.params.mtx), exist_ok=True)
 

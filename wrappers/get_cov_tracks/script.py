@@ -21,7 +21,6 @@ with open(log_filename, 'at') as f:
     f.write("## COMMAND: " + command + "\n")
 mapped_count = str(subprocess.Popen(command,shell=True,stdout=subprocess.PIPE).communicate()[0], 'utf-8')
 
-# mapped_count = str(subprocess.Popen("samtools view "+str(snakemake.input.bam)+" | head -20 | wc -l 2> /dev/null",shell=True,stdout=subprocess.PIPE).communicate()[0], 'utf-8')
 
 if int(mapped_count) >= 5:
   command = "export TMPDIR="+snakemake.params.tmpd+";"+\

@@ -117,7 +117,6 @@ if hasattr(snakemake.output, 'transcriptome_bam'):
         if os.stat(bg_file).st_size != 0:
             # We need to change chromosome names to visualize the output in UCSC Browser http://seqanswers.com/forums/archive/index.php/t-22504.html
             command = "Rscript "+convert_to_ucsc+" "+bg_file+" "+chr_file+" UCSC " + snakemake.params.organism + " >> "+log_filename+" 2>&1"
-            #command = "cat " + bg_file + " | sed -e 's/^\\([0-9XY]\\)/chr\\1/' -e 's/^MT/chrM/' | grep '^chr' > " + chr_file + " 2>> "+snakemake.log.run+" || cp "+bg_file+" "+chr_file+ " >> "+snakemake.log.run+" 2>&1 "
             f = open(log_filename, 'at')
             f.write("## COMMAND: "+command+"\n")
             f.close()
@@ -157,23 +156,6 @@ if hasattr(snakemake.output, 'transcriptome_bam'):
     f.write("## COMMAND: "+command+"\n")
     f.close()
     shell(command)
-
-    # command = "cat <( samtools view -H " +snakemake.output.transcriptome_bam+" )" + \
-    #     " <( samtools view -@ " +str(snakemake.threads)+ " " + snakemake.output.transcriptome_bam+" | " + \
-    #     "awk '{{line=$0; getline; printf \"%s %s\\n\",line,$0}}' | " + \
-    # 		"sort -S "+ str(snakemake.resources.mem)+"G -T tmp.sort | tr ' ' '\\n' ) | " + \
-    # 		"samtools view -@ " + str(snakemake.threads)+" -b - > "+ snakemake.output.transcriptome_bam+".tmp" + \
-    # 		" 2>> " + log_filename + " 2>&1"
-    # f = open(log_filename, 'at')
-    # f.write("## COMMAND: "+command+"\n")
-    # f.close()
-    # shell(command)
-    #
-    # command = "mv "+snakemake.output.transcriptome_bam+".tmp " + snakemake.output.transcriptome_bam + " >> " +log_filename + " 2>&1"
-    # f = open(log_filename, 'at')
-    # f.write("## COMMAND: "+command+"\n")
-    # f.close()
-    # shell(command)
 
     # Chimeric to BAM
     command = "samtools view -@ " + str(snakemake.threads) +" -b " + snakemake.params.prefix + "Chimeric.out.sam" + " | samtools sort -@ " + str(snakemake.threads) + " -T tmp.sort " + \
