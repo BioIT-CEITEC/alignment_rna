@@ -18,7 +18,7 @@ f.close()
 
 command = "samtools view "+str(snakemake.input.bam)+" | head -20 | wc -l"
 with open(log_filename, 'at') as f:
-    f.write("## COMMAND: " + command + "\n")
+	f.write("## COMMAND: " + command + "\n")
 mapped_count = str(subprocess.Popen(command,shell=True,stdout=subprocess.PIPE).communicate()[0], 'utf-8')
 
 
