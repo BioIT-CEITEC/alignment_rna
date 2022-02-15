@@ -23,7 +23,7 @@ mapped_count = str(subprocess.Popen(command,shell=True,stdout=subprocess.PIPE).c
 
 
 if int(mapped_count) >= 5:
-  command = "export TMPDIR="+snakemake.params.tmpd+";"+\
+	command = "export TMPDIR="+snakemake.params.tmpd+";"+\
 	          "bamCoverage"+\
 	          " -b "+snakemake.input.bam+\
 	          " -bs 5 "+\
