@@ -40,11 +40,8 @@ wildcard_constraints:
 ##### Target rules #####
 rule all:
     input:
-        expand("mapped/{sample}.bam",sample = sample_tab.sample_name),
-        expand("mapped/{sample}.bam.bai", sample = sample_tab.sample_name),
-        expand("mapped/{sample}.bigWig",sample = sample_tab.sample_name),
-        expand("mapped/{sample}.bedGraph",sample = sample_tab.sample_name),
-        "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html"
+      expand("mapped/{sample}.{ext}",sample = sample_tab.sample_name, ext = ["bam","bam.bai"] if "get_cov_tracks" in config and not config["get_cov_tracks"] else ["bam","bam.bai","bigWig","bedGraph"]),
+      "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html"
 
 ##### Modules #####
 
