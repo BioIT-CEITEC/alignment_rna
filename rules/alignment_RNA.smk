@@ -77,6 +77,7 @@ rule alignment_RNA:
             map_perc= config["map_perc"],
             map_score=config["map_score"],
             paired = paired,
+            tmpd = GLOBAL_TMPD_PATH,
     conda: "../wrappers/alignment_RNA/env.yaml"
     script: "../wrappers/alignment_RNA/script.py"
 
