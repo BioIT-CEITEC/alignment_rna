@@ -149,34 +149,35 @@ if hasattr(snakemake.output, 'transcriptome_bam'):
                 shell(command)
 
 
-    # Sort transcriptome BAMs
-    # Prepare for RSEM: sort transcriptome BAM to ensure the order of the reads, to make RSEM output (not pme) deterministic
-    if snakemake.params.paired == "SE":
-        command = "(time cat <(samtools view -H "+snakemake.output.transcriptom_bam+")"+\
-                  " <(samtools view -@ "+str(snakemake.threads)+\
-                  " "+snakemake.output.transcriptom_bam+\
-                  " | sort -S "+str(snakemake.resources.mem)+"G -T "+snakemake.params.tmpd+")"+\
-                  " | samtools view -@ "+str(snakemake.threads)+" -b -"+\
-                  ") > "+snakemake.output.transcriptom_bam+".tmp 2>> "+log_filename
-    else:
-        command = "(time cat <(samtools view -H "+snakemake.output.transcriptom_bam+")"+\
-                  " <(samtools view -@ "+str(snakemake.threads)+\
-                  " "+snakemake.output.transcriptom_bam+\
-                  " | awk '{{line=$0; getline; printf \"%s %s\\n\",line,$0}}'"+\
-                  " | sort -S "+str(snakemake.resources.mem)+"G -T "+snakemake.params.tmpd+\
-                  " | tr ' ' '\\n')"+\
-                  " | samtools view -@ "+str(snakemake.threads)+" -b -"+\
-                  ") > "+snakemake.output.transcriptom_bam+".tmp 2>> "+log_filename
-    f = open(log_filename, 'at')
-    f.write("## COMMAND: "+command+"\n")
-    f.close()
-    shell(command)
-        
-    command = "mv "+snakemake.output.transcriptom_bam+".tmp " + snakemake.output.transcriptom_bam+" >> "+log_filename+" 2>&1"
-    f = open(log_filename, 'at')
-    f.write("## COMMAND: "+command+"\n")
-    f.close()
-    shell(command)
+    # THIS IS NOT WORKING, multimapped reads are not necessarily grouped together according to rsem-sam-validator tool
+    # # Sort transcriptome BAMs
+    # # Prepare for RSEM: sort transcriptome BAM to ensure the order of the reads, to make RSEM output (not pme) deterministic
+    # if snakemake.params.paired == "SE":
+    #     command = "(time cat <(samtools view -H "+snakemake.output.transcriptom_bam+")"+\
+    #               " <(samtools view -@ "+str(snakemake.threads)+\
+    #               " "+snakemake.output.transcriptom_bam+\
+    #               " | sort -S "+str(snakemake.resources.mem)+"G -T "+snakemake.params.tmpd+")"+\
+    #               " | samtools view -@ "+str(snakemake.threads)+" -b -"+\
+    #               ") > "+snakemake.output.transcriptom_bam+".tmp 2>> "+log_filename
+    # else:
+    #     command = "(time cat <(samtools view -H "+snakemake.output.transcriptom_bam+")"+\
+    #               " <(samtools view -@ "+str(snakemake.threads)+\
+    #               " "+snakemake.output.transcriptom_bam+\
+    #               " | awk '{{line=$0; getline; printf \"%s %s\\n\",line,$0}}'"+\
+    #               " | sort -S "+str(snakemake.resources.mem)+"G -T "+snakemake.params.tmpd+\
+    #               " | tr ' ' '\\n')"+\
+    #               " | samtools view -@ "+str(snakemake.threads)+" -b -"+\
+    #               ") > "+snakemake.output.transcriptom_bam+".tmp 2>> "+log_filename
+    # f = open(log_filename, 'at')
+    # f.write("## COMMAND: "+command+"\n")
+    # f.close()
+    # shell(command)
+    #     
+    # command = "mv "+snakemake.output.transcriptom_bam+".tmp " + snakemake.output.transcriptom_bam+" >> "+log_filename+" 2>&1"
+    # f = open(log_filename, 'at')
+    # f.write("## COMMAND: "+command+"\n")
+    # f.close()
+    # shell(command)
 
     # Chimeric to BAM
     command = "(time samtools view -@ " + str(snakemake.threads) +\
