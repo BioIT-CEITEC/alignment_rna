@@ -25,7 +25,7 @@ def mark_duplicates_input(wildcards):
     input["bai"] = "mapped/{sample}.not_markDups.bam.bai"
     if config["RSEM"]:
         input["transcriptome_bam"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"
-        input["transcriptome_bai"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai"
+        #input["transcriptome_bai"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai"
     return input
 
 
@@ -63,7 +63,7 @@ rule alignment_RNA:
     output: bam = "mapped/{sample}.not_markDups.bam",
             bai = "mapped/{sample}.not_markDups.bam.bai",
             transcriptome_bam = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam",
-            transcriptome_bai = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai",
+            #transcriptome_bai = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai",
     log:    "logs/{sample}/alignment.log"
     threads: 40
     resources:  mem = 34
