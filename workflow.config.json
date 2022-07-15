@@ -173,11 +173,6 @@
         "type": "int",
         "default": 35
       },
-      "RSEM": {
-        "label": "RSEM",
-        "type": "bool",
-        "default": false
-      },
       "get_cov_tracks": {
         "label": "Get coverage tracks",
         "type": "bool",
