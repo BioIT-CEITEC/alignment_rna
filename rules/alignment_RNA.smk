@@ -23,9 +23,9 @@ def mark_duplicates_input(wildcards):
     input = {}
     input["bam"] = "mapped/{sample}.not_markDups.bam"
     input["bai"] = "mapped/{sample}.not_markDups.bam.bai"
-    if config["RSEM"]:
-        input["transcriptome_bam"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"
-        input["transcriptome_bai"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai"
+    # if config["RSEM"]:
+    #     input["transcriptome_bam"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"
+    #     input["transcriptome_bai"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai"
     return input
 
 
@@ -42,7 +42,7 @@ rule mark_duplicates:
             UMI = config["UMI"],
             umi_usage= config["umi_usage"],
             keep_not_markDups_bam= config["keep_not_markDups_bam"],
-            RSEM = config["RSEM"],
+            # RSEM = config["RSEM"],
     conda: "../wrappers/mark_duplicates/env.yaml"
     script: "../wrappers/mark_duplicates/script.py"
 

@@ -63,19 +63,19 @@ if snakemake.params.mark_duplicates == True:
         f.close()
         shell(command)
 
-        if snakemake.params.RSEM == True:
-
-            command = "umi_tools dedup -I " + snakemake.input.transcriptome_bam + " -S " + snakemake.input.transcriptome_bam.replace(".not_markDups","") + " --log " + snakemake.params.mtx + " --extract-umi-method=read_id --umi-separator='_' --method=directional --edit-distance-threshold=0 --spliced-is-unique --multimapping-detection-method=NH"
-            f = open(log_filename, 'at')
-            f.write("## COMMAND: " + command + "\n")
-            f.close()
-            shell(command)
-
-            command = "samtools index -@" + str(snakemake.threads) + " " + snakemake.input.transcriptome_bam.replace(".not_markDups","") + " >> " + log_filename + " 2>&1 "
-            f = open(log_filename, 'at')
-            f.write("## COMMAND: " + command + "\n")
-            f.close()
-            shell(command)
+        # if snakemake.params.RSEM == True:
+        #
+        #     command = "umi_tools dedup -I " + snakemake.input.transcriptome_bam + " -S " + snakemake.input.transcriptome_bam.replace(".not_markDups","") + " --log " + snakemake.params.mtx + " --extract-umi-method=read_id --umi-separator='_' --method=directional --edit-distance-threshold=0 --spliced-is-unique --multimapping-detection-method=NH"
+        #     f = open(log_filename, 'at')
+        #     f.write("## COMMAND: " + command + "\n")
+        #     f.close()
+        #     shell(command)
+        #
+        #     command = "samtools index -@" + str(snakemake.threads) + " " + snakemake.input.transcriptome_bam.replace(".not_markDups","") + " >> " + log_filename + " 2>&1 "
+        #     f = open(log_filename, 'at')
+        #     f.write("## COMMAND: " + command + "\n")
+        #     f.close()
+        #     shell(command)
 
 
     if snakemake.params.keep_not_markDups_bam == False:
