@@ -85,8 +85,8 @@ rule alignment_RNA:
 
 rule cleaned_fastq_qc:
     input:  cleaned = expand("cleaned_fastq/{{sample}}{read_pair_tags}.fastq.gz",read_pair_tags = read_pair_tags)
-    output: html = expand("qc_reports/{{sample}}/cleaned_fastqc/{read_pair_tag}_fastqc.html",read_pair_tags = read_pair_tags)
-    log:    "logs/{sample}/cleaned_fastqc_{read_pair_tag}.log"
+    output: html = expand("qc_reports/{{sample}}/cleaned_fastqc/{read_pair_tags}_fastqc.html",read_pair_tags = read_pair_tags)
+    log:    "logs/{sample}/cleaned_fastqc_{read_pair_tags}.log"
     params: extra = "--noextract --format fastq --nogroup",
     threads:  1
     conda:  "../wrappers/cleaned_fastq_qc/env.yaml"
