@@ -2,7 +2,7 @@
 
 rule alignment_RNA_multiqc:
     input:  bam = expand("mapped/{sample}.bam",sample = sample_tab.sample_name),
-            qc = expand("qc_reports/{{sample}}/cleaned_fastqc/{read_pair_tag}_fastqc.html",read_pair_tags=read_pair_tags)
+            qc = expand("qc_reports/{{sample}}/cleaned_fastqc/{read_pair_tags}_fastqc.html",read_pair_tags=read_pair_tags)
     output: html = "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html"
     log:    "logs/all_samples/alignment_RNA_multiqc.log"
     conda: "../wrappers/alignment_RNA_multiqc/env.yaml"
