@@ -2,6 +2,7 @@
 
 rule alignment_RNA_multiqc:
     input:  bam = expand("mapped/{sample}.bam",sample = sample_tab.sample_name),
+            qc = expand("qc_reports/{{sample}}/cleaned_fastqc/{read_pair_tag}_fastqc.html",read_pair_tags=read_pair_tags)
     output: html = "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html"
     log:    "logs/all_samples/alignment_RNA_multiqc.log"
     conda: "../wrappers/alignment_RNA_multiqc/env.yaml"
@@ -82,16 +83,9 @@ rule alignment_RNA:
     conda: "../wrappers/alignment_RNA/env.yaml"
     script: "../wrappers/alignment_RNA/script.py"
 
-def cleaned_fastq_qc_input(wildcards):
-    if wildcards.read_pair_tag == "SE":
-        input_fastq_read_pair_tag = ""
-    else:
-        input_fastq_read_pair_tag = "_" + wildcards.read_pair_tag
-    return f'cleaned_fastq/{wildcards.sample}{input_fastq_read_pair_tag}.fastq.gz'
-
 rule cleaned_fastq_qc:
-    input:  cleaned_fastq = cleaned_fastq_qc_input
-    output: html = "qc_reports/{sample}/cleaned_fastqc/{read_pair_tag}_fastqc.html"
+    input:  cleaned = expand("cleaned_fastq/{{sample}}{read_pair_tags}.fastq.gz",read_pair_tags = read_pair_tags)
+    output: html = expand("qc_reports/{{sample}}/cleaned_fastqc/{read_pair_tag}_fastqc.html",read_pair_tags = read_pair_tags)
     log:    "logs/{sample}/cleaned_fastqc_{read_pair_tag}.log"
     params: extra = "--noextract --format fastq --nogroup",
     threads:  1
