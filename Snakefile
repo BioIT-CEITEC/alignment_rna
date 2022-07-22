@@ -35,7 +35,7 @@ else:
 
 wildcard_constraints:
     sample = "|".join(sample_tab.sample_name),
-    read_pair_tag = "(_R.)?",
+    read_pair_tag = "R1|R2",
 
 ##### Target rules #####
 rule all:
