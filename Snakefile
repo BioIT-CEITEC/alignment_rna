@@ -27,7 +27,7 @@ sample_tab = pd.DataFrame.from_dict(config["samples"],orient="index")
 
 
 if not config["is_paired"]:
-    read_pair_tags = [""]
+    read_pair_tags = ["SE"]
     paired = "SE"
 else:
     read_pair_tags = ["_R1","_R2"]
@@ -35,7 +35,7 @@ else:
 
 wildcard_constraints:
     sample = "|".join(sample_tab.sample_name),
-    read_pair_tag = "R1|R2",
+    read_pair_tag = "R1|R2|SE",
 
 ##### Target rules #####
 rule all:

@@ -2,7 +2,7 @@
 
 rule alignment_RNA_multiqc:
     input:  bam = expand("mapped/{sample}.bam",sample = sample_tab.sample_name),
-            qc = expand("qc_reports/{sample}/cleaned_fastqc/{read_pair_tags}_fastqc.html",sample = sample_tab.sample_name,read_pair_tags=read_pair_tags)
+            qc = expand("qc_reports/{sample}/cleaned_fastqc/{read_pair_tags}_fastqc.html",sample = sample_tab.sample_name,read_pair_tags=read_pair_tag)
     output: html = "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html"
     log:    "logs/all_samples/alignment_RNA_multiqc.log"
     conda: "../wrappers/alignment_RNA_multiqc/env.yaml"
@@ -50,7 +50,7 @@ rule mark_duplicates:
 
 def alignment_RNA_input(wildcards):
     preprocessed = "cleaned_fastq"
-    if read_pair_tags == [""]:
+    if read_pair_tags == ["SE"]:
         return os.path.join(preprocessed,"{sample}.fastq.gz")
     else:
         return [os.path.join(preprocessed,"{sample}_R1.fastq.gz"),os.path.join(preprocessed,"{sample}_R2.fastq.gz")]
@@ -84,7 +84,7 @@ rule alignment_RNA:
     script: "../wrappers/alignment_RNA/script.py"
 
 def cleaned_fastq_qc_input(wildcards):
-    if wildcards.read_pair_tags == [""]:
+    if wildcards.read_pair_tag == ["SE"]:
         input_fastq_read_pair_tag = ""
     else:
         input_fastq_read_pair_tag = "_" + wildcards.read_pair_tag
@@ -92,16 +92,23 @@ def cleaned_fastq_qc_input(wildcards):
 
 rule cleaned_fastq_qc:
     input:  cleaned = cleaned_fastq_qc_input
-    output: html = "qc_reports/{sample}/cleaned_fastqc/{read_pair_tags}_fastqc.html"
-    log:    "logs/{sample}/cleaned_fastqc_{read_pair_tags}.log"
+    output: html = "qc_reports/{sample}/cleaned_fastqc/{read_pair_tag}_fastqc.html"
+    log:    "logs/{sample}/cleaned_fastqc_{read_pair_tag}.log"
     params: extra = "--noextract --format fastq --nogroup",
     threads:  1
     conda:  "../wrappers/cleaned_fastq_qc/env.yaml"
     script: "../wrappers/cleaned_fastq_qc/script.py"
 
+def raw_fastq_qc_input(wildcards):
+    if wildcards.read_pair_tag == "SE":
+        input_fastq_read_pair_tag = ""
+    else:
+        input_fastq_read_pair_tag = "_" + wildcards.read_pair_tag
+    return f'raw_fastq/{wildcards.sample}{input_fastq_read_pair_tag}.fastq.gz'
+
 rule preprocess:
-    input:  raw = expand("raw_fastq/{{sample}}{read_pair_tags}.fastq.gz",read_pair_tags = read_pair_tags),
-    output: cleaned = expand("cleaned_fastq/{{sample}}{read_pair_tags}.fastq.gz",read_pair_tags = read_pair_tags),
+    input:  raw = raw_fastq_qc_input
+    output: cleaned = expand("cleaned_fastq/{{sample}}{read_pair_tags}.fastq.gz",read_pair_tags = read_pair_tag),
     log:    "logs/{sample}/pre_alignment_processing.log"
     threads: 10
     resources:  mem = 10
