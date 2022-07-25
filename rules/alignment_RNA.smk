@@ -109,8 +109,8 @@ def raw_fastq_qc_input(wildcards):
         return [os.path.join(preprocessed,"{sample}_R1.fastq.gz"),os.path.join(preprocessed,"{sample}_R2.fastq.gz")]
 
 rule preprocess:
-    input:  raw = raw_fastq_qc_input,
-    output: cleaned = expand("cleaned_fastq/{{sample}}{pair_tags}.fastq.gz",pair_tags=["R1","R2",""]),
+    input:  raw = expand("raw_fastq/{{sample}}{read_tags}.fastq.gz",read_tags=[""] if read_pair_tags == ["SE"] else ["_R1","_R2"]),
+    output: cleaned = expand("cleaned_fastq/{{sample}}{pair_tags}.fastq.gz",pair_tags=[""] if read_pair_tags == ["SE"] else ["R1","R2"]),
     log:    "logs/{sample}/pre_alignment_processing.log"
     threads: 10
     resources:  mem = 10
