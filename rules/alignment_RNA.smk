@@ -1,13 +1,18 @@
-
+def alignment_RNA_multiqc_input(wildcards):
+    input = {}
+    input["bam"] = expand("mapped/{sample}.bam",sample = sample_tab.sample_name)
+    if read_pair_tags == ["SE"]:
+        input["qc"] = expand("qc_reports/{sample}/cleaned_fastqc/SE_fastqc.html",sample = sample_tab.sample_name)
+    else:
+        input["qc"] = [expand("qc_reports/{sample}/cleaned_fastqc/R1_fastqc.html",sample = sample_tab.sample_name), expand("qc_reports/{sample}/cleaned_fastqc/R2_fastqc.html",sample = sample_tab.sample_name)]
+    return input
 
 rule alignment_RNA_multiqc:
-    input:  bam = expand("mapped/{sample}.bam",sample = sample_tab.sample_name),
-            qc = expand("qc_reports/{sample}/cleaned_fastqc/{read_pair_tags}_fastqc.html",sample = sample_tab.sample_name,read_pair_tags=read_pair_tag)
+    input:  unpack(alignment_RNA_multiqc_input)
     output: html = "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html"
     log:    "logs/all_samples/alignment_RNA_multiqc.log"
     conda: "../wrappers/alignment_RNA_multiqc/env.yaml"
     script: "../wrappers/alignment_RNA_multiqc/script.py"
-
 
 rule get_cov_tracks:
     input:  bam = "mapped/{sample}.bam",
@@ -19,7 +24,6 @@ rule get_cov_tracks:
     conda:  "../wrappers/get_cov_tracks/env.yaml"
     script: "../wrappers/get_cov_tracks/script.py"
 
-
 def mark_duplicates_input(wildcards):
     input = {}
     input["bam"] = "mapped/{sample}.not_markDups.bam"
@@ -28,7 +32,6 @@ def mark_duplicates_input(wildcards):
     #     input["transcriptome_bam"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"
     #     input["transcriptome_bai"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai"
     return input
-
 
 rule mark_duplicates:
     input:  unpack(mark_duplicates_input)
@@ -46,7 +49,6 @@ rule mark_duplicates:
             # RSEM = config["RSEM"],
     conda: "../wrappers/mark_duplicates/env.yaml"
     script: "../wrappers/mark_duplicates/script.py"
-
 
 def alignment_RNA_input(wildcards):
     preprocessed = "cleaned_fastq"
@@ -84,31 +86,31 @@ rule alignment_RNA:
     script: "../wrappers/alignment_RNA/script.py"
 
 def cleaned_fastq_qc_input(wildcards):
-    if wildcards.read_pair_tag == ["SE"]:
-        input_fastq_read_pair_tag = ""
+    preprocessed = "cleaned_fastq"
+    if read_pair_tags == ["SE"]:
+        return os.path.join(preprocessed,"{sample}.fastq.gz")
     else:
-        input_fastq_read_pair_tag = "_" + wildcards.read_pair_tag
-    return f'cleaned_fastq/{wildcards.sample}{input_fastq_read_pair_tag}.fastq.gz'
+        return [os.path.join(preprocessed,"{sample}_R1.fastq.gz"),os.path.join(preprocessed,"{sample}_R2.fastq.gz")]
 
 rule cleaned_fastq_qc:
-    input:  cleaned = cleaned_fastq_qc_input
-    output: html = "qc_reports/{sample}/cleaned_fastqc/{read_pair_tag}_fastqc.html"
-    log:    "logs/{sample}/cleaned_fastqc_{read_pair_tag}.log"
+    input:  cleaned = cleaned_fastq_qc_input,
+    output: html = "qc_reports/{sample}/cleaned_fastqc/{tags}_fastqc.html",
+    log:    "logs/{sample}/cleaned_fastqc_{tags}.log"
     params: extra = "--noextract --format fastq --nogroup",
     threads:  1
     conda:  "../wrappers/cleaned_fastq_qc/env.yaml"
     script: "../wrappers/cleaned_fastq_qc/script.py"
 
 def raw_fastq_qc_input(wildcards):
-    if wildcards.read_pair_tag == "SE":
-        input_fastq_read_pair_tag = ""
+    preprocessed = "raw_fastq"
+    if read_pair_tags == ["SE"]:
+        return os.path.join(preprocessed,"{sample}.fastq.gz")
     else:
-        input_fastq_read_pair_tag = "_" + wildcards.read_pair_tag
-    return f'raw_fastq/{wildcards.sample}{input_fastq_read_pair_tag}.fastq.gz'
+        return [os.path.join(preprocessed,"{sample}_R1.fastq.gz"),os.path.join(preprocessed,"{sample}_R2.fastq.gz")]
 
 rule preprocess:
-    input:  raw = raw_fastq_qc_input
-    output: cleaned = expand("cleaned_fastq/{{sample}}{read_pair_tags}.fastq.gz",read_pair_tags = read_pair_tag),
+    input:  raw = raw_fastq_qc_input,
+    output: cleaned = expand("cleaned_fastq/{{sample}}{pair_tags}.fastq.gz",pair_tags=["R1","R2",""]),
     log:    "logs/{sample}/pre_alignment_processing.log"
     threads: 10
     resources:  mem = 10
