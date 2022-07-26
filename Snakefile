@@ -9,7 +9,6 @@ configfile: "config.json"
 GLOBAL_REF_PATH = "/mnt/references/"
 GLOBAL_TMPD_PATH = "/tmp/"
 
-
 # setting organism from reference
 f = open(os.path.join(GLOBAL_REF_PATH,"reference_info","reference.json"),)
 reference_dict = json.load(f)
@@ -23,8 +22,8 @@ reference_directory = os.path.join(GLOBAL_REF_PATH,config["organism"],config["re
 
 # Samples
 #
-sample_tab = pd.DataFrame.from_dict(config["samples"],orient="index")
 
+sample_tab = pd.DataFrame.from_dict(config["samples"],orient="index")
 
 if not config["is_paired"]:
     read_pair_tags = ["SE"]
