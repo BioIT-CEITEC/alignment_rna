@@ -89,7 +89,7 @@ rule alignment_RNA:
 def cleaned_fastq_qc_input(wildcards):
     preprocessed = "cleaned_fastq"
     if read_pair_tags == ["SE"]:
-        return os.path.join(preprocessed,"{sample}{tags}.fastq.gz")
+        return os.path.join(preprocessed,"{sample}.fastq.gz")
     else:
         return os.path.join(preprocessed,"{sample}_{tags}.fastq.gz")
 
