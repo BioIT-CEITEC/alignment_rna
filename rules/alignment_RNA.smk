@@ -4,7 +4,8 @@ def alignment_RNA_multiqc_input(wildcards):
     if read_pair_tags == ["SE"]:
         input["qc"] = expand("qc_reports/{sample}/cleaned_fastqc/SE_fastqc.html",sample = sample_tab.sample_name)
     else:
-        input["qc"] = [expand("qc_reports/{sample}/cleaned_fastqc/R1_fastqc.html",sample = sample_tab.sample_name), expand("qc_reports/{sample}/cleaned_fastqc/R2_fastqc.html",sample = sample_tab.sample_name)]
+        input["r1"] = expand("qc_reports/{sample}/cleaned_fastqc/R1_fastqc.html",sample=sample_tab.sample_name)
+        input["r2"] = expand("qc_reports/{sample}/cleaned_fastqc/R2_fastqc.html",sample=sample_tab.sample_name)
     return input
 
 rule alignment_RNA_multiqc:
@@ -110,7 +111,7 @@ def raw_fastq_qc_input(wildcards):
 
 rule preprocess:
     input:  raw = expand("raw_fastq/{{sample}}{read_tags}.fastq.gz",read_tags=[""] if read_pair_tags == ["SE"] else ["_R1","_R2"]),
-    output: cleaned = expand("cleaned_fastq/{{sample}}{pair_tags}.fastq.gz",pair_tags=[""] if read_pair_tags == ["SE"] else ["R1","R2"]),
+    output: cleaned = expand("cleaned_fastq/{{sample}}{pair_tags}.fastq.gz",pair_tags=[""] if read_pair_tags == ["SE"] else ["_R1","_R2"]),
     log:    "logs/{sample}/pre_alignment_processing.log"
     threads: 10
     resources:  mem = 10
