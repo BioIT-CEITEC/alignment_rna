@@ -91,7 +91,7 @@ def cleaned_fastq_qc_input(wildcards):
     if read_pair_tags == ["SE"]:
         return os.path.join(preprocessed,"{sample}.fastq.gz")
     else:
-        return os.path.join(preprocessed,"{sample}_{tags}.fastq.gz")
+        return os.path.join(preprocessed,"{sample}_{read_pair_tags}.fastq.gz")
 
 rule cleaned_fastq_qc:
     input:  cleaned = cleaned_fastq_qc_input,
