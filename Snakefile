@@ -30,14 +30,12 @@ if not config["is_paired"]:
     pair_tag = [""]
     paired = "SE"
 else:
-    read_pair_tags = ["_R1","_R2"]
+    read_pair_tags = ["R1","R2"]
     pair_tag = ["_R1","_R2"]
     paired = "PE"
 
 wildcard_constraints:
-    sample = "|".join(sample_tab.sample_name),
-    read_pair_tag = "R1|R2|SE",
-    pair_tags = "|".join(pair_tag),
+    sample = "|".join(sample_tab.sample_name)
 
 ##### Target rules #####
 rule all:

@@ -95,8 +95,8 @@ def cleaned_fastq_qc_input(wildcards):
 
 rule cleaned_fastq_qc:
     input:  cleaned = cleaned_fastq_qc_input,
-    output: html = "qc_reports/{sample}/cleaned_fastqc/{tags}_fastqc.html",
-    log:    "logs/{sample}/cleaned_fastqc_{tags}.log"
+    output: html = "qc_reports/{sample}/cleaned_fastqc/{read_pair_tags}_fastqc.html",
+    log:    "logs/{sample}/cleaned_fastqc_{read_pair_tags}.log"
     params: extra = "--noextract --format fastq --nogroup",
     threads:  1
     conda:  "../wrappers/cleaned_fastq_qc/env.yaml"
@@ -110,8 +110,8 @@ def raw_fastq_qc_input(wildcards):
         return [os.path.join(preprocessed,"{sample}_R1.fastq.gz"),os.path.join(preprocessed,"{sample}_R2.fastq.gz")]
 
 rule preprocess:
-    input:  raw = expand("raw_fastq/{{sample}}{read_tags}.fastq.gz",read_tags=[""] if read_pair_tags == ["SE"] else ["_R1","_R2"]),
-    output: cleaned = expand("cleaned_fastq/{{sample}}{pair_tags}.fastq.gz",pair_tags=[""] if read_pair_tags == ["SE"] else ["_R1","_R2"]),
+    input:  raw = expand("raw_fastq/{{sample}}{read_tags}.fastq.gz",read_tags=pair_tag),
+    output: cleaned = expand("cleaned_fastq/{{sample}}{read_tags}.fastq.gz",read_tags=pair_tag),
     log:    "logs/{sample}/pre_alignment_processing.log"
     threads: 10
     resources:  mem = 10
