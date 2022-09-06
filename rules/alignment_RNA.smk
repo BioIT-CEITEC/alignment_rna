@@ -11,6 +11,7 @@ def alignment_RNA_multiqc_input(wildcards):
 rule alignment_RNA_multiqc:
     input:  unpack(alignment_RNA_multiqc_input)
     output: html = "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html"
+    params: mark_duplicates= config["mark_duplicates"],
     log:    "logs/all_samples/alignment_RNA_multiqc.log"
     conda: "../wrappers/alignment_RNA_multiqc/env.yaml"
     script: "../wrappers/alignment_RNA_multiqc/script.py"
