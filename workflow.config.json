@@ -30,7 +30,7 @@
         "label": "Genomic Reference",
         "type": "enum",
         "default": ##INCLUDE:reference_info/default_reference.json##,
-        "list": ##INCLUDE:reference_info/reference.json##
+        "list": ##INCLUDE:reference_info/reference2.json##
       },
       "RNAseq_type" : {
         "label": "RNAseq type",
