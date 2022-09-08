@@ -17,7 +17,7 @@ f.close()
 
 if snakemake.params.mark_duplicates == True:
     extra = "./qc_reports/*/MarkDuplicates/*"
-else
+else:
     extra = ""
 multiqc_search_paths =  extra + " ./qc_reports/*/cleaned_fastqc/*" + " ./mapped/*" + " ./mapped/*/*_STARgenome/*" + " ./qc_reports/*/trimmomatic/*"
 
