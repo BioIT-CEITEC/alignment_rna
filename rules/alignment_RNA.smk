@@ -30,8 +30,7 @@ def mark_duplicates_input(wildcards):
     input = {}
     input["bam"] = "mapped/{sample}.not_markDups.bam"
     input["bai"] = "mapped/{sample}.not_markDups.bam.bai"
-    # if config["RSEM"]:
-    #     input["transcriptome_bam"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"
+    input["transcriptome_bam"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"
     #     input["transcriptome_bai"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai"
     return input
 
@@ -39,16 +38,16 @@ rule mark_duplicates:
     input:  unpack(mark_duplicates_input)
     output: bam = "mapped/{sample}.bam",
             bai = "mapped/{sample}.bam.bai",
+            transcriptome_bam = "mapped/transcriptome/{sample}.transcriptome.bam",
     log:    "logs/{sample}/mark_duplicates.log"
     threads: 8
     resources:  mem = 15
     params: mtx = "qc_reports/{sample}/MarkDuplicates/{sample}.markDups_metrics.txt",
-            mark_duplicates= config["mark_duplicates"],
+            mark_duplicates = config["mark_duplicates"],
             rmDup = config["remove_duplicates"], # allow possibility for rm duplicates true
             UMI = config["UMI"],
-            umi_usage= config["umi_usage"],
-            keep_not_markDups_bam= config["keep_not_markDups_bam"],
-            # RSEM = config["RSEM"],
+            umi_usage = config["umi_usage"],
+            keep_not_markDups_bam = config["keep_not_markDups_bam"],
     conda: "../wrappers/mark_duplicates/env.yaml"
     script: "../wrappers/mark_duplicates/script.py"
 
