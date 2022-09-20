@@ -177,6 +177,12 @@
         "label": "Get coverage tracks",
         "type": "bool",
         "default": false
+      },
+       "lib_ROI": {
+        "label": "Regions of interest",
+        "type": "enum",
+        "default": "rna",
+        "list": {"rna": "RNA"}
       }
     }
   }
