@@ -48,7 +48,7 @@ if snakemake.params.mark_duplicates == True:
         shell(command)
 
         if snakemake.params.rmDup == False:
-            command = "mv -T " + snakemake.input.transcriptome_bam + " " + snakemake.output.transcriptome_bam
+            command = "cp -T " + snakemake.input.transcriptome_bam + " " + snakemake.output.transcriptome_bam
             f = open(log_filename, 'at')
             f.write("## COMMAND: " + command + "\n")
             f.close()
