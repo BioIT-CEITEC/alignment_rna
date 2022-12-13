@@ -1,55 +1,52 @@
-def alignment_RNA_multiqc_input(wildcards):
-    input = {}
-    input["bam"] = expand("mapped/{sample}.bam",sample = sample_tab.sample_name)
+
+rule preprocess:
+    input:  raw = expand("raw_fastq/{{sample}}{read_tags}.fastq.gz",read_tags=pair_tag),
+    output: cleaned = expand("cleaned_fastq/{{sample}}{read_tags}.fastq.gz",read_tags=pair_tag),
+    log:    "logs/{sample}/pre_alignment_processing.log"
+    threads: 10
+    resources:  mem = 10
+    params: adaptors = config["trim_adapters"],
+            r1u = "cleaned_fastq/trimmed/{sample}_R1.discarded.fastq.gz",
+            r2u = "cleaned_fastq/trimmed/{sample}_R2.discarded.fastq.gz",
+            trim_left1 = config["trim_left1"], # Applied only if trim left is true, trimming from R1 (different for classic:0, quant:10, sense:9)
+            trim_right1 = config["trim_right1"], # Applied only if trim right is true, trimming from R1; you should allow this if you want to trim the last extra base and TRIM_LE is true as RD_LENGTH is not effective
+            trim_left2 = config["trim_left2"], # Applied only if trim left is true, trimming from R2 (different for classic:0, quant:?, sense:7)
+            trim_right2 = config["trim_right2"], # Applied only if trim right is true, trimming from R2; you should allow this if you want to trim the last extra base and TRIM_LE is true as RD_LENGTH is not effective
+            phred = "-phred33",
+            leading = 3,
+            trailing = 3,
+            crop = 250,
+            minlen = config["min_length"],
+            slid_w_1 = 4,
+            slid_w_2 = 5,
+            trim_stats = "qc_reports/{sample}/trimmomatic/trim_stats.log"
+    conda:  "../wrappers/preprocess/env.yaml"
+    script: "../wrappers/preprocess/script.py"
+
+
+def raw_fastq_qc_input(wildcards):
+    preprocessed = "raw_fastq"
     if read_pair_tags == ["SE"]:
-        input["qc"] = expand("qc_reports/{sample}/cleaned_fastqc/SE_fastqc.html",sample = sample_tab.sample_name)
+        return os.path.join(preprocessed,"{sample}.fastq.gz")
     else:
-        input["r1"] = expand("qc_reports/{sample}/cleaned_fastqc/R1_fastqc.html",sample=sample_tab.sample_name)
-        input["r2"] = expand("qc_reports/{sample}/cleaned_fastqc/R2_fastqc.html",sample=sample_tab.sample_name)
-    return input
+        return [os.path.join(preprocessed,"{sample}_R1.fastq.gz"),os.path.join(preprocessed,"{sample}_R2.fastq.gz")]
 
-rule alignment_RNA_multiqc:
-    input:  unpack(alignment_RNA_multiqc_input)
-    output: html = "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html"
-    params: mark_duplicates= config["mark_duplicates"],
-    log:    "logs/all_samples/alignment_RNA_multiqc.log"
-    conda: "../wrappers/alignment_RNA_multiqc/env.yaml"
-    script: "../wrappers/alignment_RNA_multiqc/script.py"
+def cleaned_fastq_qc_input(wildcards):
+    preprocessed = "cleaned_fastq"
+    if read_pair_tags == ["SE"]:
+        return os.path.join(preprocessed,"{sample}.fastq.gz")
+    else:
+        return os.path.join(preprocessed,"{sample}_{read_pair_tags}.fastq.gz")
 
-rule get_cov_tracks:
-    input:  bam = "mapped/{sample}.bam",
-    output: bw  = "mapped/{sample}.bigWig",
-            bg  = "mapped/{sample}.bedGraph",
-    log:    "logs/{sample}/get_cov_tracks.log"
-    threads: 4
-    params: tmpd = GLOBAL_TMPD_PATH
-    conda:  "../wrappers/get_cov_tracks/env.yaml"
-    script: "../wrappers/get_cov_tracks/script.py"
+rule cleaned_fastq_qc:
+    input:  cleaned = cleaned_fastq_qc_input,
+    output: html = "qc_reports/{sample}/cleaned_fastqc/{read_pair_tags}_fastqc.html",
+    log:    "logs/{sample}/cleaned_fastqc_{read_pair_tags}.log"
+    params: extra = "--noextract --format fastq --nogroup",
+    threads:  1
+    conda:  "../wrappers/cleaned_fastq_qc/env.yaml"
+    script: "../wrappers/cleaned_fastq_qc/script.py"
 
-def mark_duplicates_input(wildcards):
-    input = {}
-    input["bam"] = "mapped/{sample}.not_markDups.bam"
-    input["bai"] = "mapped/{sample}.not_markDups.bam.bai"
-    input["transcriptome_bam"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"
-    #     input["transcriptome_bai"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai"
-    return input
-
-rule mark_duplicates:
-    input:  unpack(mark_duplicates_input)
-    output: bam = "mapped/{sample}.bam",
-            bai = "mapped/{sample}.bam.bai",
-            transcriptome_bam = "mapped/transcriptome/{sample}.transcriptome.bam",
-    log:    "logs/{sample}/mark_duplicates.log"
-    threads: 8
-    resources:  mem = 15
-    params: mtx = "qc_reports/{sample}/MarkDuplicates/{sample}.markDups_metrics.txt",
-            mark_duplicates = config["mark_duplicates"],
-            rmDup = config["remove_duplicates"], # allow possibility for rm duplicates true
-            UMI = config["UMI"],
-            umi_usage = config["umi_usage"],
-            keep_not_markDups_bam = config["keep_not_markDups_bam"],
-    conda: "../wrappers/mark_duplicates/env.yaml"
-    script: "../wrappers/mark_duplicates/script.py"
 
 def alignment_RNA_input(wildcards):
     preprocessed = "cleaned_fastq"
@@ -57,6 +54,7 @@ def alignment_RNA_input(wildcards):
         return os.path.join(preprocessed,"{sample}.fastq.gz")
     else:
         return [os.path.join(preprocessed,"{sample}_R1.fastq.gz"),os.path.join(preprocessed,"{sample}_R2.fastq.gz")]
+
 
 rule alignment_RNA:
     input:  fastqs = alignment_RNA_input,
@@ -86,50 +84,65 @@ rule alignment_RNA:
     conda: "../wrappers/alignment_RNA/env.yaml"
     script: "../wrappers/alignment_RNA/script.py"
 
-def cleaned_fastq_qc_input(wildcards):
-    preprocessed = "cleaned_fastq"
+def mark_duplicates_input(wildcards):
+    input = {}
+    input["bam"] = "mapped/{sample}.not_markDups.bam"
+    input["bai"] = "mapped/{sample}.not_markDups.bam.bai"
+    input["transcriptome_bam"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"
+    #     input["transcriptome_bai"] = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai"
+    return input
+
+rule mark_duplicates:
+    input:  unpack(mark_duplicates_input)
+    output: bam = "mapped/{sample}.bam",
+            bai = "mapped/{sample}.bam.bai",
+            transcriptome_bam = "mapped/transcriptome/{sample}.transcriptome.bam",
+    log:    "logs/{sample}/mark_duplicates.log"
+    threads: 8
+    resources:  mem = 15
+    params: mtx = "qc_reports/{sample}/MarkDuplicates/{sample}.markDups_metrics.txt",
+            mark_duplicates = config["mark_duplicates"],
+            rmDup = config["remove_duplicates"], # allow possibility for rm duplicates true
+            UMI = config["UMI"],
+            umi_usage = config["umi_usage"],
+            keep_not_markDups_bam = config["keep_not_markDups_bam"],
+    conda: "../wrappers/mark_duplicates/env.yaml"
+    script: "../wrappers/mark_duplicates/script.py"
+
+rule get_cov_tracks:
+    input:  bam = "mapped/{sample}.bam",
+    output: bw  = "mapped/{sample}.bigWig",
+            bg  = "mapped/{sample}.bedGraph",
+    log:    "logs/{sample}/get_cov_tracks.log"
+    threads: 4
+    params: tmpd = GLOBAL_TMPD_PATH
+    conda:  "../wrappers/get_cov_tracks/env.yaml"
+    script: "../wrappers/get_cov_tracks/script.py"
+
+def alignment_RNA_multiqc_input(wildcards):
+    input = {}
+    input["bam"] = expand("mapped/{sample}.bam",sample = sample_tab.sample_name)
     if read_pair_tags == ["SE"]:
-        return os.path.join(preprocessed,"{sample}.fastq.gz")
+        input["qc"] = expand("qc_reports/{sample}/cleaned_fastqc/SE_fastqc.html",sample = sample_tab.sample_name)
     else:
-        return os.path.join(preprocessed,"{sample}_{read_pair_tags}.fastq.gz")
+        input["r1"] = expand("qc_reports/{sample}/cleaned_fastqc/R1_fastqc.html",sample=sample_tab.sample_name)
+        input["r2"] = expand("qc_reports/{sample}/cleaned_fastqc/R2_fastqc.html",sample=sample_tab.sample_name)
+    return input
 
-rule cleaned_fastq_qc:
-    input:  cleaned = cleaned_fastq_qc_input,
-    output: html = "qc_reports/{sample}/cleaned_fastqc/{read_pair_tags}_fastqc.html",
-    log:    "logs/{sample}/cleaned_fastqc_{read_pair_tags}.log"
-    params: extra = "--noextract --format fastq --nogroup",
-    threads:  1
-    conda:  "../wrappers/cleaned_fastq_qc/env.yaml"
-    script: "../wrappers/cleaned_fastq_qc/script.py"
+rule alignment_RNA_multiqc:
+    input:  unpack(alignment_RNA_multiqc_input)
+    output: html = "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html"
+    params: mark_duplicates= config["mark_duplicates"],
+    log:    "logs/all_samples/alignment_RNA_multiqc.log"
+    conda: "../wrappers/alignment_RNA_multiqc/env.yaml"
+    script: "../wrappers/alignment_RNA_multiqc/script.py"
 
-def raw_fastq_qc_input(wildcards):
-    preprocessed = "raw_fastq"
-    if read_pair_tags == ["SE"]:
-        return os.path.join(preprocessed,"{sample}.fastq.gz")
-    else:
-        return [os.path.join(preprocessed,"{sample}_R1.fastq.gz"),os.path.join(preprocessed,"{sample}_R2.fastq.gz")]
 
-rule preprocess:
-    input:  raw = expand("raw_fastq/{{sample}}{read_tags}.fastq.gz",read_tags=pair_tag),
-    output: cleaned = expand("cleaned_fastq/{{sample}}{read_tags}.fastq.gz",read_tags=pair_tag),
-    log:    "logs/{sample}/pre_alignment_processing.log"
-    threads: 10
-    resources:  mem = 10
-    params: adaptors = config["trim_adapters"],
-            r1u = "cleaned_fastq/trimmed/{sample}_R1.discarded.fastq.gz",
-            r2u = "cleaned_fastq/trimmed/{sample}_R2.discarded.fastq.gz",
-            trim_left1 = config["trim_left1"], # Applied only if trim left is true, trimming from R1 (different for classic:0, quant:10, sense:9)
-            trim_right1 = config["trim_right1"], # Applied only if trim right is true, trimming from R1; you should allow this if you want to trim the last extra base and TRIM_LE is true as RD_LENGTH is not effective
-            trim_left2 = config["trim_left2"], # Applied only if trim left is true, trimming from R2 (different for classic:0, quant:?, sense:7)
-            trim_right2 = config["trim_right2"], # Applied only if trim right is true, trimming from R2; you should allow this if you want to trim the last extra base and TRIM_LE is true as RD_LENGTH is not effective
-            phred = "-phred33",
-            leading = 3,
-            trailing = 3,
-            crop = 250,
-            minlen = config["min_length"],
-            slid_w_1 = 4,
-            slid_w_2 = 5,
-            trim_stats = "qc_reports/{sample}/trimmomatic/trim_stats.log"
-    conda:  "../wrappers/preprocess/env.yaml"
-    script: "../wrappers/preprocess/script.py"
+
+
+
+
+
+
+
 
