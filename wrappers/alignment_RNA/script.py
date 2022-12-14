@@ -92,11 +92,11 @@ if hasattr(snakemake.output, 'transcriptome_bam'):
     f.close()
     shell(command)
 
-command = "rm -r " + snakemake.params.prefix + "*pass1" + " >> "+log_filename+" 2>&1 "
-f = open(log_filename, 'at')
-f.write("## COMMAND: "+command+"\n")
-f.close()
-shell(command)
+# command = "rm -r " + snakemake.params.prefix + "*pass1" + " >> "+log_filename+" 2>&1 "
+# f = open(log_filename, 'at')
+# f.write("## COMMAND: "+command+"\n")
+# f.close()
+# shell(command)
 
 command = "(time samtools index -@ "+str(snakemake.threads)+ " "+ snakemake.output.bam + " " + snakemake.output.bai + ") >> "+log_filename+" 2>&1 "
 f = open(log_filename, 'at')
