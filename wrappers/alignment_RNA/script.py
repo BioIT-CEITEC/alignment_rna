@@ -51,7 +51,7 @@ if snakemake.params.paired == "SE":
 else:
     STAR_parameters = " --peOverlapMMp 0.1 --chimOutJunctionFormat 1 --chimSegmentMin 12 --chimJunctionOverhangMin 12"
 
-command = "export TMPDIR=" + snakemake.params.tmpd + " TMP=" + snakemake.params.tmpd + " && (time STAR" + \
+command = "(time STAR" + \
            " --runMode alignReads --runThreadN " + str(snakemake.threads) + \
            " --genomeDir " + star_index_dir + \
            " --readFilesIn " + str(snakemake.input.fastqs)  + \
@@ -73,11 +73,10 @@ command = "export TMPDIR=" + snakemake.params.tmpd + " TMP=" + snakemake.params.
            " --outSAMunmapped Within --outFilterType BySJout --outSAMattributes All" + \
            extra_flags_star_motif +" --quantMode GeneCounts TranscriptomeSAM --sjdbScore 1 --twopassMode Basic " + \
            " --outMultimapperOrder Random --outSAMtype BAM SortedByCoordinate"+\
-           ") >> "+log_filename+" 2>&1 "
+           " --outTmpDir " + snakemake.params.tmpd + ") >> "+log_filename+" 2>&1 "
 f = open(log_filename, 'at')
 f.write("## COMMAND: "+command+"\n")
 f.close()
-
 shell(command)
 
 command = "mv " + snakemake.params.prefix + "Aligned.sortedByCoord.out.bam " + snakemake.output.bam + " >> "+log_filename+" 2>&1 "
@@ -105,12 +104,12 @@ f.write("## COMMAND: "+command+"\n")
 f.close()
 shell(command)
 
-command = "export TMPDIR=" + snakemake.params.tmpd + " TMP=" + snakemake.params.tmpd + " && (time STAR" + \
+command = "(time STAR" + \
           " --runMode inputAlignmentsFromBAM" + \
           " --inputBAMfile " + snakemake.output.bam + \
           " --outWigType bedGraph" + extra_flags_star_wig + \
           " --outFileNamePrefix " + snakemake.params.prefix+\
-          ") >> "+log_filename+" 2>&1 " # --outWigReferencesPrefix chr suitable for UCSC
+          " --outTmpDir " + snakemake.params.tmpd + ") >> "+log_filename+" 2>&1 " # --outWigReferencesPrefix chr suitable for UCSC
 f = open(log_filename, 'at')
 f.write("## COMMAND: "+command+"\n")
 f.close()
