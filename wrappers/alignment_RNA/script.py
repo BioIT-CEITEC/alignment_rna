@@ -72,8 +72,9 @@ command = "(time STAR" + \
            " --outSAMattrRGline ID:"+str(snakemake.wildcards.sample)+" PL:Illumina PU:"+str(snakemake.wildcards.sample)+" SM:"+str(snakemake.wildcards.sample) + \
            " --outSAMunmapped Within --outFilterType BySJout --outSAMattributes All" + \
            extra_flags_star_motif +" --quantMode GeneCounts TranscriptomeSAM --sjdbScore 1 --twopassMode Basic " + \
-           " --outMultimapperOrder Random --outSAMtype BAM SortedByCoordinate"+\
-           " --outTmpDir " + snakemake.params.tmpd + ") >> "+log_filename+" 2>&1 "
+           " --outMultimapperOrder Random --outSAMtype BAM SortedByCoordinate" + \
+           " --outTmpDir " + snakemake.params.tmpd + "/" + snakemake.wildcards.sample + \
+           ") >> "+log_filename+" 2>&1 "
 f = open(log_filename, 'at')
 f.write("## COMMAND: "+command+"\n")
 f.close()
@@ -104,12 +105,14 @@ f.write("## COMMAND: "+command+"\n")
 f.close()
 shell(command)
 
+
 command = "(time STAR" + \
           " --runMode inputAlignmentsFromBAM" + \
           " --inputBAMfile " + snakemake.output.bam + \
           " --outWigType bedGraph" + extra_flags_star_wig + \
           " --outFileNamePrefix " + snakemake.params.prefix+\
-          " --outTmpDir " + snakemake.params.tmpd + ") >> "+log_filename+" 2>&1 " # --outWigReferencesPrefix chr suitable for UCSC
+          " --outTmpDir " + snakemake.params.tmpd + "/" + snakemake.wildcards.sample + \
+          ") >> "+log_filename+" 2>&1 " # --outWigReferencesPrefix chr suitable for UCSC
 f = open(log_filename, 'at')
 f.write("## COMMAND: "+command+"\n")
 f.close()
