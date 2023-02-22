@@ -43,7 +43,7 @@ rule cleaned_fastq_qc:
     output: html = "qc_reports/{sample}/cleaned_fastqc/{read_pair_tags}_fastqc.html",
     log:    "logs/{sample}/cleaned_fastqc_{read_pair_tags}.log"
     params: extra = "--noextract --format fastq --nogroup",
-    threads:  1
+    threads:  2
     conda:  "../wrappers/cleaned_fastq_qc/env.yaml"
     script: "../wrappers/cleaned_fastq_qc/script.py"
 
