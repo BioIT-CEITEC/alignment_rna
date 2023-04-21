@@ -4,6 +4,10 @@
     "version": 1.0,
     "label": "Alignment RNA",
     "type": "alignment_RNA",
+    "run_parameters": {
+      "cpu": 35,
+      "memory": 65
+    },
     "inputs": "raw_fastq/{sample}*fastq.gz",
     "outputs": [
       "cleaned_fastq/{sample}*fastq.gz",
