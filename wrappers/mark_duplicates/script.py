@@ -80,15 +80,22 @@ if snakemake.params.mark_duplicates == True:
         f.close()
         shell(command)
 
-        command = "cat <(samtools view -@ " + str(snakemake.threads) + " -H " + snakemake.input.transcriptome_bam + ") " + \
-                  "<(samtools view -@ " + str(snakemake.threads) + " " + snakemake.input.transcriptome_bam + " | " + \
-                  "grep -w -F -f <(samtools view -@ " + str(snakemake.threads) + " " + snakemake.output.bam + " | cut -f 1 | sort -u)) | " + \
-                  "samtools view -@ " + str(snakemake.threads) + " -b - > " + snakemake.output.transcriptome_bam
+        if snakemake.params.rmDup == False:
+            command = "cp -T " + snakemake.input.transcriptome_bam + " " + snakemake.output.transcriptome_bam
+            f = open(log_filename, 'at')
+            f.write("## COMMAND: " + command + "\n")
+            f.close()
+            shell(command)
+        else:
+            command = "cat <(samtools view -@ " + str(snakemake.threads) + " -H " + snakemake.input.transcriptome_bam + ") " + \
+                      "<(samtools view -@ " + str(snakemake.threads) + " " + snakemake.input.transcriptome_bam + " | " + \
+                      "grep -w -F -f <(samtools view -@ " + str(snakemake.threads) + " " + snakemake.output.bam + " | cut -f 1 | sort -u)) | " + \
+                      "samtools view -@ " + str(snakemake.threads) + " -b - > " + snakemake.output.transcriptome_bam
 
-        f = open(log_filename, 'at')
-        f.write("## COMMAND: " + command + "\n")
-        f.close()
-        shell(command)
+            f = open(log_filename, 'at')
+            f.write("## COMMAND: " + command + "\n")
+            f.close()
+            shell(command)
 
     if snakemake.params.keep_not_markDups_bam == False:
         command = "rm " + snakemake.input.bam
