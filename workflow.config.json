@@ -90,9 +90,14 @@
         "default": 1000000
       },
       "strandness": {
-        "label": "Strandness",
-        "type": "string",
-        "default": "unstr",
+        "label": "Strandness (unstr,fwd,rev)",
+        "type": "enum",
+        "default": "rev",
+        "list": {
+          "unstr": "Unstranded",
+          "fwd": "Forward",
+          "rev": "Reverse"
+        },
         "conditions": {
           "value": {
             "RNAseq_type": {
