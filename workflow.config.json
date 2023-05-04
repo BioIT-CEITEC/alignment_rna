@@ -1,7 +1,7 @@
 {
   "workflow_description": {
     "name": "alignment_RNA",
-    "version": 1.0,
+    "version": 1.4,
     "label": "Alignment RNA",
     "type": "alignment_RNA",
     "run_parameters": {
