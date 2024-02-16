@@ -8,7 +8,7 @@
       "cpu": 35,
       "memory": 65
     },
-    "inputs": "cleaned_fastq/{sample}*fastq.gz",
+    "inputs": "processed_fastq/{sample}*fastq.gz",
     "outputs": [
       "mapped/*",
       "logs/*",

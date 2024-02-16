@@ -52,11 +52,11 @@ rule mark_duplicates:
     script: "../wrappers/mark_duplicates/script.py"
 
 def alignment_RNA_input(wildcards):
-    preprocessed = "cleaned_fastq"
+    processed = "processed_fastq"
     if read_pair_tags == ["SE"]:
-        return os.path.join(preprocessed,"{sample}.fastq.gz")
+        return os.path.join(processed,"{sample}.fastq.gz")
     else:
-        return [os.path.join(preprocessed,"{sample}_R1.fastq.gz"),os.path.join(preprocessed,"{sample}_R2.fastq.gz")]
+        return [os.path.join(processed,"{sample}_R1.fastq.gz"),os.path.join(processed,"{sample}_R2.fastq.gz")]
 
 rule alignment_RNA:
     input:  fastqs = alignment_RNA_input,
