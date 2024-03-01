@@ -144,7 +144,7 @@ if hasattr(snakemake.output, 'transcriptome_bam'):
             shell(command)
 
             if os.stat(chr_file).st_size != 0:
-                command = "(time bedGraphToBigWig "+ chr_file + " " + snakemake.input.fai_ucsc[0] +\
+                command = "(time bedGraphToBigWig "+ chr_file + " " + snakemake.input.fai_ucsc +\
                           " " +  bg_file.replace(".bg","") + "_chr.bigWig"+\
                           ") >> "+log_filename+" 2>&1 "
                 f = open(log_filename, 'at')
