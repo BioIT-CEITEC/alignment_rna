@@ -10,9 +10,21 @@
     },
     "inputs": "processed_fastq/{sample}*fastq.gz",
     "outputs": [
-      "mapped/*",
-      "logs/*",
-      "qc_reports/*"
+      "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html",
+      "logs/all_samples/alignment_RNA_multiqc.log",
+      "mapped/{sample}.bam",
+      "mapped/{sample}.bam.bai",
+      "mapped/transcriptome/{sample}.transcriptome.bam",
+      "logs/{sample}/mark_duplicates.log",
+      "logs/{sample}/alignment.log"
+    ],
+    "outputs_optional": [
+      "mapped/{sample}.bigWig",
+      "mapped/{sample}.bedGraph",
+      "logs/{sample}/get_cov_tracks.log",
+      "mapped/{sample}.not_markDups.bam",
+      "mapped/{sample}.not_markDups.bam.bai",
+      "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam"
     ],
     "report_index": "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html",
     "reports":[
