@@ -146,7 +146,16 @@
         "label": "Regions of interest",
         "type": "enum",
         "default": "rna",
-        "list": {"rna": "RNA"}
+        "list": {"rna": "RNA"},
+         "conditions": {
+          "relevance": {
+            "operand": "equal",
+            "negation": false,
+            "values": {
+              "RNAseq_type": "hidden"
+            }
+          }
+        }
       }
     }
   }
