@@ -15,6 +15,7 @@
       "mapped/{sample}.bam",
       "mapped/{sample}.bam.bai",
       "mapped/transcriptome/{sample}.transcriptome.bam",
+      "qc_reports/{sample}/MarkDuplicates/{sample}.markDups_metrics.txt",
       "logs/{sample}/mark_duplicates.log",
       "logs/{sample}/alignment.log"
     ],
