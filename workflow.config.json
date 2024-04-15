@@ -14,6 +14,7 @@
       "logs/all_samples/alignment_RNA_multiqc.log",
       "mapped/{sample}.bam",
       "mapped/{sample}.bam.bai",
+      "mapped/{sample}/*",
       "mapped/transcriptome/{sample}.transcriptome.bam",
       "logs/{sample}/mark_duplicates.log",
       "logs/{sample}/alignment.log"
