@@ -6,7 +6,7 @@
     "type": "alignment_RNA",
     "run_parameters": {
       "cpu": 35,
-      "memory": 65
+      "memory": 125
     },
     "inputs": "cleaned_fastq/{sample}*fastq.gz",
     "outputs": [
