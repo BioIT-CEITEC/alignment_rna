@@ -70,7 +70,7 @@ rule alignment_RNA:
             # transcriptome_bai = "mapped/transcriptome/{sample}.not_markDups.transcriptome.bam.bai",
     log:    "logs/{sample}/alignment.log"
     threads: 40
-    resources:  mem = 34
+    resources:  mem = 64
     params: prefix = "mapped/{sample}/{sample}",
             strandness = config["strandness"],
             num_mismatch= 999,  # Maximum number of mismatches; set this to high number (999) to disable and to use only perc_mismatch
