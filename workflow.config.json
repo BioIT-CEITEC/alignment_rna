@@ -1,14 +1,14 @@
 {
   "workflow_description": {
     "name": "alignment_RNA",
-    "version": 1.5,
+    "version": 2.0,
     "label": "Alignment RNA",
     "type": "alignment_RNA",
     "run_parameters": {
       "cpu": 35,
       "memory": 125
     },
-    "inputs": "cleaned_fastq/{sample}*fastq.gz",
+    "inputs": "processed_fastq/{sample}*fastq.gz",
     "outputs": [
       "qc_reports/all_samples/alignment_RNA_multiqc/multiqc.html",
       "logs/all_samples/alignment_RNA_multiqc.log",
@@ -46,8 +46,8 @@
       "reference": {
         "label": "Genomic Reference",
         "type": "enum",
-        "default": ##INCLUDE:reference_info/default_reference.json##,
-        "list": ##INCLUDE:reference_info/reference2.json##
+        "default": ##INCLUDE:reference-info.v24.1/default_reference.json##,
+        "list": ##INCLUDE:reference-info.v24.1/reference2.json##
       },
       "RNAseq_type" : {
         "label": "RNAseq type",
@@ -148,7 +148,16 @@
         "label": "Regions of interest",
         "type": "enum",
         "default": "rna",
-        "list": {"rna": "RNA"}
+        "list": {"rna": "RNA"},
+         "conditions": {
+          "relevance": {
+            "operand": "equal",
+            "negation": false,
+            "values": {
+              "RNAseq_type": "hidden"
+            }
+          }
+        }
       }
     }
   }
