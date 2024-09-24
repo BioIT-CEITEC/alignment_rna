@@ -43,12 +43,35 @@
   ],
   "gui_params": {
     "primary": {
-      "reference": {
-        "label": "Genomic Reference",
-        "type": "enum",
-        "default": ##INCLUDE:reference-info.v24.1/default_reference.json##,
-        "list": ##INCLUDE:reference-info.v24.1/reference2.json##
-      },
+      "organism": {
+          "label": "Organism",
+          "type": "enum",
+          "dynamicEnumName": "organism"
+        },
+        "assembly": {
+          "label": "Genomic Reference",
+          "type": "enum",
+          "dynamicEnumName": "reference",
+          "filters": {
+            "group": {
+              "param": "reference",
+              "type": "value",
+              "showGroupLabel": false
+            }
+          }
+        },
+        "release": {
+          "label": "Release",
+          "type": "enum",
+          "dynamicEnumName": "release",
+          "filters": {
+            "group": {
+              "param": "assembly",
+              "type": "value",
+              "showGroupLabel": false
+            }
+          }
+        },
       "RNAseq_type" : {
         "label": "RNAseq type",
         "type": "enum",
