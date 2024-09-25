@@ -49,12 +49,12 @@
           "dynamicEnumName": "organism"
         },
         "assembly": {
-          "label": "Genomic Reference",
+          "label": "Assembly",
           "type": "enum",
-          "dynamicEnumName": "reference",
+          "dynamicEnumName": "assembly",
           "filters": {
             "group": {
-              "param": "reference",
+              "param": "organism",
               "type": "value",
               "showGroupLabel": false
             }
