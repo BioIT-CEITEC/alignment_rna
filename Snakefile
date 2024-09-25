@@ -41,8 +41,8 @@ rule all:
 include: "rules/alignment_RNA.smk"
 
 ##### BioRoot utilities - prepare reference #####
-module PR:
-    snakefile: github("BioIT-CEITEC/bioroots_utilities", path="prepare_reference.smk",branch="master")
-    config: config
-
-use rule * from PR as other_*
+#module PR:
+#    snakefile: github("BioIT-CEITEC/bioroots_utilities", path="prepare_reference.smk",branch="master")
+#    config: config
+#
+#use rule * from PR as other_*
