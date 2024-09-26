@@ -169,7 +169,7 @@
       },
       "lib_ROI": {
         "type": "constant",
-        "default": "UNK"
+        "default": "UNK_UNK"
       }
     }
   }
