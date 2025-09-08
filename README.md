@@ -9,19 +9,13 @@ This repository contains a Snakemake workflow for processing and aligning RNA-Se
 - **Configurable:** All parameters (paths, organism, alignment options, etc.) are set via `workflow.config.json`.
 
 ## Workflow Overview
-1. **Preprocessing** (optional):
-   - Trimming and cleaning of raw FASTQ files.
-   - Adapter removal and quality filtering.
-2. **Quality Control:**
-   - FastQC reports for cleaned FASTQ files.
-   - MultiQC summary report for all samples.
-3. **Alignment:**
+1. **Alignment:**
    - STAR alignment of reads to reference genome.
    - Generation of BAM files and transcriptome BAM files.
-4. **Mark Duplicates:**
+2. **Mark Duplicates:**
    - Identification and marking/removal of duplicate reads.
    - Metrics reporting.
-5. **Coverage Tracks:**
+3. **Coverage Tracks:**
    - Generation of BigWig and BedGraph coverage files from BAMs.
 
 ## Directory Structure
@@ -39,16 +33,10 @@ wrappers/
         env.yaml
         multiqc_config.txt
         script.py
-    cleaned_fastq_qc/
-        env.yaml
-        script.py
     get_cov_tracks/
         env.yaml
         script.py
     mark_duplicates/
-        env.yaml
-        script.py
-    preprocess/
         env.yaml
         script.py
 ```
