@@ -12,7 +12,7 @@ os.makedirs(GLOBAL_TMPD_PATH, exist_ok=True)
 
 ##### BioRoot utilities #####
 module BR:
-    snakefile: gitlab("bioroots/bioroots_utilities", path="bioroots_utilities.smk",branch="master")
+    snakefile: github("BioIT-CEITEC/bioroots_utilities", path="bioroots_utilities.smk",branch="master")
     config: config
 
 use rule * from BR as other_*
@@ -41,8 +41,9 @@ rule all:
 include: "rules/alignment_RNA.smk"
 
 ##### BioRoot utilities - prepare reference #####
-module PR:
-    snakefile: gitlab("bioroots/bioroots_utilities", path="prepare_reference.smk",branch="master")
-    config: config
+#module PR:
+#    snakefile: github("BioIT-CEITEC/bioroots_utilities", path="prepare_reference.smk",branch="master")
+#    config: config
+#
+#use rule * from PR as other_*
 
-use rule * from PR as other_*

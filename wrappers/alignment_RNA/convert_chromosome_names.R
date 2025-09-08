@@ -20,10 +20,10 @@ run_all <- function(args){
   
   a <- Sys.time()
   print(a)
-  input_DT <- as.data.table(fread(paste("zgrep","-v","^#",input_file),
+  input_DT <- fread(cmd=paste("zgrep","-v","^#",input_file),
                                   sep="\t",
                                   colClasses=c("character"),
-                                  header=FALSE))
+                                  header=FALSE)
   print(Sys.time() - a)
   
   print(paste("# getting names for",dest_DB))
