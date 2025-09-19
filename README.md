@@ -24,7 +24,8 @@ This repository contains a Snakemake workflow for processing and aligning RNA-Se
 - `rules/`: Snakemake rule files for each workflow step.
 - `wrappers/`: Scripts and conda environments for each step.
 - `qc_reports/`: Output directory for QC results and reports.
-- `processed_fastq/`: Output directory for processed FastQ files.
+- `processed_fastq/`: Input directory for processed FastQ files.
+- `mapped/`: Output directory for alignment BAM files.
 - `logs/`: Log files for each step.
 
 ## Usage
