@@ -19,27 +19,13 @@ This repository contains a Snakemake workflow for processing and aligning RNA-Se
    - Generation of BigWig and BedGraph coverage files from BAMs.
 
 ## Directory Structure
-```
-Snakefile
-workflow.config.json
-rules/
-    alignment_RNA.smk
-wrappers/
-    alignment_RNA/
-        convert_chromosome_names.R
-        env.yaml
-        script.py
-    alignment_RNA_multiqc/
-        env.yaml
-        multiqc_config.txt
-        script.py
-    get_cov_tracks/
-        env.yaml
-        script.py
-    mark_duplicates/
-        env.yaml
-        script.py
-```
+- `Snakefile`: Main workflow file.
+- `workflow.config.json`: Configuration file.
+- `rules/`: Snakemake rule files for each workflow step.
+- `wrappers/`: Scripts and conda environments for each step.
+- `qc_reports/`: Output directory for QC results and reports.
+- `processed_fastq/`: Output directory for processed FastQ files.
+- `logs/`: Log files for each step.
 
 ## Usage
 1. **Configure the workflow:**
