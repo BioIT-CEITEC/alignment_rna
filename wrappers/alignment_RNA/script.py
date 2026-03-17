@@ -184,8 +184,18 @@ if hasattr(snakemake.output, 'transcriptome_bam'):
     # shell(command)
 
     # Chimeric to BAM
-    command = "(time samtools view -@ " + str(snakemake.threads) +\
-              " -b " + snakemake.params.prefix + "Chimeric.out.sam" +\
+    # Add a check for long value in the 9th field of the sam file that can cause error
+    command = """(time awk -F '\t' 'BEGIN{OFS="\t"} {if($9 ~ /^-?[0-9]+$/ && length($9) > 10) $9 = substr($9,1,1) == "-" ? "-" substr($9,2,10) : substr($9,1,10); print}' """ +\
+    snakemake.params.prefix + "Chimeric.out.sam" +\
+    "> " + snakemake.params.prefix + "Chimeric.out.sam.rounded) >> " + log_filename + " 2>&1"
+
+    f = open(log_filename, 'at')
+    f.write("## COMMAND: "+command+"\n")
+    f.close()
+    shell(command)
+    
+    command = "samtools view -@ " + str(snakemake.threads) +\
+              " -b " + snakemake.params.prefix + "Chimeric.out.sam.rounded" +\
               " | samtools sort -@ " + str(snakemake.threads) + " -T "+snakemake.params.tmpd+\
               " -o " + snakemake.params.prefix + "Chimeric.out.bam -" +\
               ") >> " + log_filename + " 2>&1"
@@ -194,7 +204,7 @@ if hasattr(snakemake.output, 'transcriptome_bam'):
     f.close()
     shell(command)
 
-    command = "rm -f " + snakemake.params.prefix + "Chimeric.out.sam" + " >> " + log_filename + " 2>&1"
+    command = "rm -f " + snakemake.params.prefix + "Chimeric.out.sam " + snakemake.params.prefix + "Chimeric.out.sam.rounded"+ " >> " + log_filename + " 2>&1"
     f = open(log_filename, 'at')
     f.write("## COMMAND: "+command+"\n")
     f.close()
