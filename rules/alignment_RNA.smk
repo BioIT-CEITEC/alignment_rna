@@ -47,6 +47,7 @@ rule mark_duplicates:
             rmDup = config["remove_duplicates"], # allow possibility for rm duplicates true
             UMI = config["UMI"],
             umi_usage = config["umi_usage"],
+            umi_sep = config["umi_sep"],
             keep_not_markDups_bam = config["keep_not_markDups_bam"],
     conda: "../wrappers/mark_duplicates/env.yaml"
     script: "../wrappers/mark_duplicates/script.py"
