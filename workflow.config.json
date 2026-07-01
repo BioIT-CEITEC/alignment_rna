@@ -112,7 +112,7 @@
         }
       },
       "umi_sep": {
-        "label": "UMI separator.",
+        "label": "UMI separator",
         "type": "enum",
         "default": "_",
         "list": {
