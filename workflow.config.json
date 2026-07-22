@@ -112,6 +112,24 @@
           "mark_duplicates": "Mark duplicates"
         }
       },
+      "umi_sep": {
+        "label": "UMI separator",
+        "type": "enum",
+        "default": "_",
+        "list": {
+          "_": "_",
+          ":": ":"
+        },
+        "conditions": {
+          "relevance": {
+            "operand": "equal",
+            "negation": false,
+            "values": {
+              "umi_usage": "mark_duplicates"
+            }
+          }
+        }
+       },
       "remove_duplicates": {
         "label": "Remove duplicates",
         "type": "bool",

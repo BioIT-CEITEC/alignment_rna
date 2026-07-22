@@ -68,7 +68,7 @@ if snakemake.params.mark_duplicates == True:
     else:
 
         command = "umi_tools dedup -I " + snakemake.input.bam + " -S " + snakemake.output.bam + " --log " + snakemake.params.mtx \
-        + " --extract-umi-method=read_id --umi-separator='_' --method=directional --edit-distance-threshold=0 --spliced-is-unique --multimapping-detection-method=NH"
+        + " --extract-umi-method=read_id --umi-separator='" + str(snakemake.params.umi_sep) + "' --method=directional --edit-distance-threshold=0 --spliced-is-unique --multimapping-detection-method=NH"
         f = open(log_filename, 'at')
         f.write("## COMMAND: "+command+"\n")
         f.close()
