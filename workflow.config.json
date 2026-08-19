@@ -61,6 +61,48 @@
             }
           }
         },
+        "species_name": {
+          "type": "enum",
+          "label": "Species Latin name",
+          "dynamicEnumName": "species_name",
+          "filters": {
+            "group": {
+              "param": "organism",
+              "type": "value",
+              "showGroupLabel": false
+            }
+          },
+          "conditions": {
+            "relevance": {
+              "operand": "equal",
+              "negation": false,
+              "values": {
+                "organism": "marsupilamus_fantasii"
+              }
+            }
+          }
+        },
+        "species": {
+          "type": "enum",
+          "label": "Species common name",
+          "dynamicEnumName": "species",
+          "filters": {
+            "group": {
+              "param": "organism",
+              "type": "value",
+              "showGroupLabel": false
+            }
+          },
+          "conditions": {
+            "relevance": {
+              "operand": "equal",
+              "negation": false,
+              "values": {
+                "organism": "marsupilamus_fantasii"
+              }
+            }
+          }
+        },
         "release": {
           "label": "Release",
           "type": "enum",
