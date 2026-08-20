@@ -103,6 +103,27 @@
             }
           }
         },
+        "ref_KEGG": {
+          "type": "enum",
+          "label": "KEGG organism code",
+          "dynamicEnumName": "species",
+          "filters": {
+            "group": {
+              "param": "organism",
+              "type": "value",
+              "showGroupLabel": false
+            }
+          },
+          "conditions": {
+            "relevance": {
+              "operand": "equal",
+              "negation": false,
+              "values": {
+                "organism": "marsupilamus_fantasii"
+              }
+            }
+          }
+        },
         "release": {
           "label": "Release",
           "type": "enum",
