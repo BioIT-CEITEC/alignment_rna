@@ -106,7 +106,7 @@
         "ref_KEGG": {
           "type": "enum",
           "label": "KEGG organism code",
-          "dynamicEnumName": "species",
+          "dynamicEnumName": "ref_KEGG",
           "filters": {
             "group": {
               "param": "organism",
